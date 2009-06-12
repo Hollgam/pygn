@@ -776,6 +776,7 @@ class PGN_GUI(Frame):
 
     def changeBoardSize(self):
         if self.selectedBoardSize.get() == "Small":
+            self.middleListPos = 4
             if self.selectedColorScheme.get() == "Set 1":
                 try:
                     self.imageEmpty = PhotoImage(file = "img/set1/small/empty.gif")
@@ -816,6 +817,7 @@ class PGN_GUI(Frame):
             self.canvasInfo["height"] = 298
 
         elif self.selectedBoardSize.get() == "Default":
+            self.middleListPos = 7
             if self.selectedColorScheme.get() == "Set 1":
                 try:
                     self.imageEmpty = PhotoImage(file = "img/set1/default/empty.gif")
@@ -855,6 +857,7 @@ class PGN_GUI(Frame):
             self.canvasInfo["height"] = 418
 
         elif self.selectedBoardSize.get() == "Large":
+            self.middleListPos = 10
             if self.selectedColorScheme.get() == "Set 1":
                 try:
                     self.imageEmpty = PhotoImage(file = "img/set1/large/empty.gif")
@@ -918,6 +921,7 @@ class PGN_GUI(Frame):
         if self.selectedColorScheme.get() == "Set 1":
             if self.selectedBoardSize.get() == "Small":
                 try:
+                    
                     self.imageEmpty = PhotoImage(file = "img/set1/small/empty.gif")
                     self.imageWhiteRock = PhotoImage(file = "img/set1/small/wr.png")
                     self.imageBlackRock = PhotoImage(file = "img/set1/small/br.png")
