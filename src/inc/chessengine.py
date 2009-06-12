@@ -1651,7 +1651,6 @@ def playGame(gameList, playToNumber=-1, whiteLast=0):
                     #check if maximum number reached
                     if playToNumber!=-1:
                         if numberCounter==playToNumber+2:
-                            print 'STOPPED AT NUMBER',numberCounter-2
                             return board
                     for j in range(i+1,len(gameList)):
                         if gameList[j]==' ':
@@ -1661,7 +1660,6 @@ def playGame(gameList, playToNumber=-1, whiteLast=0):
                             spaceNumber = j+1
                             noBlackMove = 1
                     if ((playToNumber==-1 and not str(numberCounter-1) in gameList[i:]) or (playToNumber!=-1 and numberCounter==playToNumber+1)) and whiteLast:
-                        print 'YES'
                         noBlackMove = 1
                     if not noBlackMove:
                         lastMove = 1
