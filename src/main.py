@@ -86,7 +86,7 @@ class PGN_GUI(Frame):
 
         self.pack(expand=YES, fill=BOTH)
         self.master.resizable(0, 0)
-        self.master.title('PGNReader')
+        self.master.title('PyGN')
         self.master.iconbitmap('img/favicon.ico')
 
 
@@ -111,7 +111,7 @@ class PGN_GUI(Frame):
         # create Options menu and items
         self.choices.addmenu("Options", "Twik this program")
 
-        
+
         #color scheme
         self.choices.addcascademenu("Options", "Pieces Style")
         self.selectedColorScheme = StringVar()
@@ -265,7 +265,7 @@ class PGN_GUI(Frame):
         #NOTES
         self.infoPage = self.notebook.add('Notes       ')
 
-        
+
         self.notebook.setnaturalsize()
 
     def createBoard(self):
@@ -424,7 +424,7 @@ class PGN_GUI(Frame):
                 self.canvas.create_window(0, 0, anchor=NW, window=self.frameList)
                 self.frameList.update_idletasks()
                 self.canvas.config(scrollregion=self.canvas.bbox("all"))
-                
+
             self.canvas.yview(MOVETO,1.0)
             self.prevButton.config(background=self.canvas["background"])
             self.buttonsDic[(maxNumber,not self.noBlackLastMove)].config(background=self.colorSelected)
@@ -479,7 +479,7 @@ class PGN_GUI(Frame):
 #            print "length:",self.vscrollbar.get()[1]-self.vscrollbar.get()[0], "changed:",tempCounter,"number:",moveNumber,"stop:",stopOnWhite,"var:",((maxNumber-moveNumber-self.middleListPos)*2-stopOnWhite)
 #            print self.vscrollbar.get()[1]-self.vscrollbar.get()[0]
 #            print self.vscrollbar.get()[0]-self.buttonHC
-            
+
 #            print 1.0-length-self.buttonHC
 #            countA = ((maxNumber-moveNumber-self.middleListPos)*2-stopOnWhite)
 #            a = 1.0-length- tempCounter*self.buttonHC
@@ -536,7 +536,7 @@ class PGN_GUI(Frame):
                     self.changeImages(changes)
                 else:
                     invalidMove(changes)
-                    
+
             self.prevButton.config(background=self.canvas["background"])
             if not (playTo == 0 and stopOnWhite==1):
                 self.buttonsDic[(playTo,stopOnWhite)].config(background=self.colorSelected)
@@ -611,7 +611,7 @@ class PGN_GUI(Frame):
                 print playTo, not stopOnWhite
                 changes = playGame(self.gameLine, playTo, not stopOnWhite)
                 if type(changes) != type(1):
-                    self.changeImages(changes)                    
+                    self.changeImages(changes)
                 else:
                     invalidMove(changes)
             self.prevButton.config(background=self.canvas["background"])
