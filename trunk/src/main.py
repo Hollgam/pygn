@@ -472,19 +472,7 @@ class PGN_GUI(Frame):
         global stopOnWhite, tempCounter
         from inc.chessengine import board, moveNumber
         if maxNumber-moveNumber+1>=self.middleListPos-1+stopOnWhite:
-#            tempCounter += 1
-#            length = self.vscrollbar.get()[1]-self.vscrollbar.get()[0]
-#            print self.vscrollbar.get()[0]-self.buttonHC, 1.0-length-3*self.buttonHC, self.buttonHC
             self.canvas.yview(MOVETO,((moveNumber-self.middleListPos-1)*2+stopOnWhite)*self.buttonHC)
-#            self.canvas.yview(MOVETO,1.0-length-((maxNumber-moveNumber-self.middleListPos+2)*2-stopOnWhite)*self.buttonHC)
-#            print "length:",self.vscrollbar.get()[1]-self.vscrollbar.get()[0], "changed:",tempCounter,"number:",moveNumber,"stop:",stopOnWhite,"var:",((maxNumber-moveNumber-self.middleListPos)*2-stopOnWhite)
-#            print self.vscrollbar.get()[1]-self.vscrollbar.get()[0]
-#            print self.vscrollbar.get()[0]-self.buttonHC
-
-#            print 1.0-length-self.buttonHC
-#            countA = ((maxNumber-moveNumber-self.middleListPos)*2-stopOnWhite)
-#            a = 1.0-length- tempCounter*self.buttonHC
-#            print self.vscrollbar.get()[0]-a, a
         else:
             self.canvas.yview(MOVETO,1.0)
 
@@ -498,7 +486,6 @@ class PGN_GUI(Frame):
                 clearAll()
                 if playTo<0:
                     playTo = 0
-                print playTo, stopOnWhite
                 changes = playGame(self.gameLine, playTo, stopOnWhite)
                 if stopOnWhite == 0:
                     stopOnWhite = 1
@@ -533,7 +520,6 @@ class PGN_GUI(Frame):
                 clearAll()
                 if playTo<0:
                     playTo = 0
-                print playTo, not stopOnWhite
                 changes = playGame(self.gameLine, playTo, not stopOnWhite)
 
                 if type(changes) != type(1):
@@ -562,9 +548,7 @@ class PGN_GUI(Frame):
     def moveForward(self):
         global maxNumber
         global stopOnWhite
-
         from inc.chessengine import board, moveNumber
-        print moveNumber, moveNumber == self.middleListPos
 
         if moveNumber+stopOnWhite >= self.middleListPos:
             self.canvas.yview(MOVETO,((moveNumber-self.middleListPos-1)*2+stopOnWhite)*self.buttonHC)
@@ -596,9 +580,10 @@ class PGN_GUI(Frame):
             self.prevButton=self.buttonsDic[(playTo,stopOnWhite)]
 
     def moveForward5(self):
-        global stopOnWhite,moveNumber
+        global stopOnWhite
         global maxNumber
         from inc.chessengine import board, moveNumber
+        
         if moveNumber+5 >= self.middleListPos:
             self.canvas.yview(MOVETO,((moveNumber-self.middleListPos+5)*2)*self.buttonHC)
         else:
