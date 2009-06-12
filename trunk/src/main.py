@@ -545,7 +545,6 @@ class PGN_GUI(Frame):
             createStartPosition()
             if self.gameLine != 'ERROR':
                 clearAll()
-                print 0,  "0"
                 changes = playGame(self.gameLine, 0, 0)
                 stopOnWhite = 1
                 if type(changes) != type(1):
@@ -561,10 +560,11 @@ class PGN_GUI(Frame):
         global stopOnWhite
 
         from inc.chessengine import board, moveNumber
-        if moveNumber > self.middleListPos:
+        print moveNumber, moveNumber == self.middleListPos
+        if moveNumber >= self.middleListPos:
+            print "GOGOGO"
             self.canvas.yview(MOVETO,self.vscrollbar.get()[0]+self.buttonHC)
 
-        print self.vscrollbar.get()[0]
         if not (moveNumber == maxNumber and stopOnWhite == 1):
             createStartPosition()
             if stopOnWhite == 0:
@@ -576,7 +576,6 @@ class PGN_GUI(Frame):
                     playTo = moveNumber+ 1
             if self.gameLine != 'ERROR':
                 clearAll()
-                print playTo, stopOnWhite
                 changes = playGame(self.gameLine, playTo, stopOnWhite)
                 if stopOnWhite == 0:
                     stopOnWhite = 1
@@ -608,7 +607,6 @@ class PGN_GUI(Frame):
                     playTo = moveNumber + 5
             if self.gameLine != 'ERROR':
                 clearAll()
-                print playTo, not stopOnWhite
                 changes = playGame(self.gameLine, playTo, not stopOnWhite)
                 if type(changes) != type(1):
                     self.changeImages(changes)
@@ -621,7 +619,6 @@ class PGN_GUI(Frame):
             createStartPosition()
             if self.gameLine != 'ERROR':    #CHECK IN POS IF END ON WHITE!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 clearAll()                  #MAYBE EXCEPT "0" SMTH OTHER!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                print maxNumber,  "0"
                 changes = playGame(self.gameLine, maxNumber, 0)
                 stopOnWhite = 1
                 if type(changes) != type(1):
