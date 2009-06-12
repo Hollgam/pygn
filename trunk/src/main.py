@@ -100,6 +100,7 @@ class PGN_GUI(Frame):
         # create File menu and items
         self.choices.addmenu("Game", "Game")
         self.choices.addmenuitem("Game", "command", "Load new File", command=self.loadGame, label="Load")
+        self.choices.addmenuitem("Game", "command", "Close current game", command=self.closeGame, label="Close")
         self.choices.addmenuitem("Game", 'separator')
         self.choices.addmenuitem("Game", "command", "Exit this game", command=self.exitGame, label="Exit")
 
@@ -1204,7 +1205,10 @@ class PGN_GUI(Frame):
 
         self.infoList.update_idletasks()
         self.canvasInfo.config(scrollregion=self.canvasInfo.bbox("all"))
-        #self.canvasInfo.yview(MOVETO,1.0)
+        if self.gameInfo["White"] and self.gameInfo["Black"]:
+            newTitle = "PyGN - " + self.gameInfo["White"] + " vs " + self.gameInfo["Black"]
+            self.master.title(newTitle)
+
 
     def flipBoard(self):
         self.boardFliped  = not self.boardFliped
@@ -1226,6 +1230,47 @@ class PGN_GUI(Frame):
         self.showLastPosition(1)
         self.showInfoAboutGame()
 
+    def closeGame(self):
+        clearAll()
+        self.__init__()
+#        self.createBoard()
+#        self.currentPosition = createStartPosition()
+#        self.makeButtonsDisabled()
+#        self.showStartPosition()
+#
+#
+#        #LIST OF MOVES
+#        self.moveListFrame.grid(row=0,column=0,sticky=NW)
+#        self.vscrollbar.grid(row=0, column=1, sticky=N+S, pady=4)
+#        self.canvas.grid(row=0, column=0, sticky=N+S+E+W, pady=4)
+#        self.vscrollbar.config(command=self.canvas.yview)
+#        self.canvas.create_window(0, 0, anchor=NW, window=self.frameList)
+#        self.frameList.update_idletasks()
+#        self.canvas.config(scrollregion=self.canvas.bbox("all"))
+#
+#        #FRAME SHOWING TAKEN PIECES
+#        self.numberWhiteTaken = 0
+#        self.numberBlackTaken = 0
+#        self.takenPiecesContainer.grid(row=1,column=0,sticky=W, padx=4)
+#
+#        self.takenPiecesFrame.grid(row=0,column=0,sticky=W, padx=1, pady=1)
+#        self.takenPiecesFrame.grid_propagate(False)
+#
+#
+#        #INFO ABOUT GAME
+#
+#        self.infoFrame.grid(row=0,column=0,sticky=NW)
+#        self.vscrollbarInfo.grid(row=0, column=1, sticky=N+S, pady=4)
+#        self.canvasInfo.grid(row=0, column=0, sticky=N+S+E+W, pady=4)
+#        self.vscrollbarInfo.config(command=self.canvasInfo.yview)
+#        self.canvasInfo.create_window(0, 0, anchor=NW, window=self.infoList)
+#        self.infoList.update_idletasks()
+#        self.canvasInfo.config(scrollregion=self.canvasInfo.bbox("all"))
+#
+#        self.noInfoLabel = Label(self.infoList, text = "Load game to see info about it.", font=self.infoLeftFont)
+#        self.noInfoLabel.grid(row=0,column=0, sticky=W, padx=1)
+        
+
     def makeButtonsActive(self):
         self.KeyStart.config(state = ACTIVE)
         self.KeyBack5.config(state = ACTIVE)
@@ -1233,6 +1278,14 @@ class PGN_GUI(Frame):
         self.KeyForward.config(state = ACTIVE)
         self.KeyForward5.config(state = ACTIVE)
         self.KeyEnd.config(state = ACTIVE)
+
+    def makeButtonsDisabled(self):
+        self.KeyStart.config(state = DISABLED)
+        self.KeyBack5.config(state = DISABLED)
+        self.KeyBack.config(state = DISABLED)
+        self.KeyForward.config(state = DISABLED)
+        self.KeyForward5.config(state = DISABLED)
+        self.KeyEnd.config(state = DISABLED)
 
     def exitGame(self, event=None):
         """Game-Exit"""

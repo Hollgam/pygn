@@ -1823,6 +1823,7 @@ def readInfoFromFile(fileName):
 def clearAll():
     global board, castleWhite, castleBlack, kingWhiteMoved, kingBlackMoved, rockKingWhiteMoved, rockQueenWhiteMoved
     global rockKingBlackMoved, rockQueenBlackMoved, moveNumber, checkMode, mateMode, kingWhiteCoord, kingBlackCoord, promotionMode, passingMoveAvailable
+    global takenWhite, takenBlack
 
     castleWhite = 0 # 1 when white has already done castle
     castleBlack = 0 # 1 when black has already done castle
@@ -1839,3 +1840,5 @@ def clearAll():
     kingBlackCoord = [0,4] # initial coordinates of black king
     promotionMode = ''
     passingMoveAvailable = ''
+    takenWhite = []
+    takenBlack = []
