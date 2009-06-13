@@ -84,13 +84,17 @@ class PGN_GUI(Frame):
         except:
             print "Falied to load files from \\img\\set1 folder"
 
+        self.master.bind("<Control-Key-O>", self.loadGame)
+        self.master.bind("<Control-Key-o>", self.loadGame)
+        self.master.bind("<Control-Key-Q>", self.closeGame)
+        self.master.bind("<Control-Key-q>", self.closeGame)
 
         self.pack(expand=YES, fill=BOTH)
         self.master.resizable(0, 0)
         self.master.title('PyGN')
         self.master.iconbitmap('img/favicon.ico')
 
-
+    
         # HEADER
         self.headerFrame = Frame(self)
         self.headerFrame.grid(column=0 , row=0, sticky = W+N)
@@ -109,6 +113,11 @@ class PGN_GUI(Frame):
         #flip board
         self.choices.addmenuitem("View", "command", "Flip board", command=self.flipBoard, label="Flip board")
 
+        self.choices.addcascademenu("View", "Show Sidebar")
+        self.selectedShowSidebar = StringVar()
+        self.selectedShowSidebar.set("Yes")
+        self.choices.addmenuitem("Show Sidebar", "radiobutton", label="Yes", variable=self.selectedShowSidebar, command=self.changeShowSidebar)
+        self.choices.addmenuitem("Show Sidebar", "radiobutton", label="No", variable=self.selectedShowSidebar, command=self.changeShowSidebar)
 
         # create Options menu and items
         self.choices.addmenu("Options", "Twik this program")
@@ -170,6 +179,7 @@ class PGN_GUI(Frame):
 
         self.choices.addmenu("Help", "Help")
         self.choices.addmenuitem("Help", "command", command=self.showAbout, label="About")
+        self.choices.addmenuitem("Help", "command", command=self.showKeys, label="Keyboard shortcuts")
 
         self.mainFrame = Frame(self)
         self.mainFrame.grid(column=0, row=1)
@@ -363,7 +373,7 @@ class PGN_GUI(Frame):
     def cellClicked(self, event ):
         pass
 
-    def showLastPosition(self,firstTime=0):
+    def showLastPosition(self,firstTime=0, event= None):
         global maxNumber, stopOnWhite
         from inc.chessengine import board, moveNumber
         createStartPosition()
@@ -458,7 +468,7 @@ class PGN_GUI(Frame):
             stopOnWhite = not stopOnWhite
 
 
-    def showStartPosition(self):
+    def showStartPosition(self, event= None):
         global stopOnWhite
         from inc.chessengine import board, moveNumber
         self.currentPosition = board
@@ -471,7 +481,7 @@ class PGN_GUI(Frame):
         self.prevButton.config(background=self.listCanvas["background"])
 
 
-    def moveBack(self):
+    def moveBack(self, event= None):
         global stopOnWhite, tempCounter
         from inc.chessengine import board, moveNumber
         if maxNumber-moveNumber+1>=self.middleListPos-1+stopOnWhite:
@@ -504,7 +514,7 @@ class PGN_GUI(Frame):
                 self.buttonsDic[(playTo,stopOnWhite)].config(background=self.colorSelected)
                 self.prevButton=self.buttonsDic[(playTo,stopOnWhite)]
 
-    def moveBack5(self):
+    def moveBack5(self, event= None):
         global stopOnWhite
         from inc.chessengine import board, moveNumber
 
@@ -548,7 +558,7 @@ class PGN_GUI(Frame):
 
 
 
-    def moveForward(self):
+    def moveForward(self, event= None):
         global maxNumber
         global stopOnWhite
         from inc.chessengine import board, moveNumber
@@ -582,7 +592,7 @@ class PGN_GUI(Frame):
             self.buttonsDic[(playTo,stopOnWhite)].config(background=self.colorSelected)
             self.prevButton=self.buttonsDic[(playTo,stopOnWhite)]
 
-    def moveForward5(self):
+    def moveForward5(self, event= None):
         global stopOnWhite
         global maxNumber
         from inc.chessengine import board, moveNumber
@@ -715,6 +725,18 @@ class PGN_GUI(Frame):
                 self.buttons[lastPosition2[0]][lastPosition2[1]].config(background = default2)
             except:
                 pass
+
+    def changeShowSidebar(self):
+
+        if self.selectedShowSidebar.get() == "Yes":
+            self.notebook.grid()
+        elif self.selectedShowSidebar.get() == "No":
+            self.notebook.grid_remove()
+            
+#        if self.selectedShowSidebar.get() == "Yes":
+#            self.selectedShowSidebar.set("No")
+#        elif self.selectedShowSidebar.get() == "No":
+#            self.selectedShowSidebar.set("Yes")
 
     def changeShowNextMove(self):
         pass
@@ -1220,7 +1242,12 @@ class PGN_GUI(Frame):
         """Help-About"""
         showinfo("About", "Made by Hollgam and Vinchkovsky \nVersion: %s\nPython 2.6.1\nAdditional modules: Tkinter, tkMessageBox, PMW, PIL" % __version__)
 
-    def loadGame(self):
+    def showKeys(self):
+        """Help-About"""
+        showinfo("Keyboard shortcuts", "6 - Move forward\n4 - Move backwards\n9 - Move forward 5 moves\n7 - Move backwards 5 moves\n8 - Last position\n5 - Initial position\nSpace - Move forward\nCtrl+O - Load a game\nCtrl+Q - Close a game")
+
+
+    def loadGame(self, event= None):
         # window for choosing file to laod
         #fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
 
@@ -1231,8 +1258,9 @@ class PGN_GUI(Frame):
         self.showLastPosition(1)
         self.showInfoAboutGame()
 
-    def closeGame(self):
+    def closeGame(self, event= None):
         clearAll()
+        self.unBindKeys()
         self.__init__()
 #        self.createBoard()
 #        self.currentPosition = createStartPosition()
@@ -1280,6 +1308,15 @@ class PGN_GUI(Frame):
         self.KeyForward5.config(state = ACTIVE)
         self.KeyEnd.config(state = ACTIVE)
 
+        #click on the buttons
+        self.master.bind("<KeyPress-6>", self.moveForward)
+        self.master.bind("<KeyPress-space>", self.moveForward)
+        self.master.bind("<KeyPress-4>", self.moveBack)
+        self.master.bind("<KeyPress-9>", self.moveForward5)
+        self.master.bind("<KeyPress-7>", self.moveBack5)
+        self.master.bind("<KeyPress-8>", self.showLastPosition)
+        self.master.bind("<KeyPress-5>", self.showStartPosition)
+
     def makeButtonsDisabled(self):
         self.KeyStart.config(state = DISABLED)
         self.KeyBack5.config(state = DISABLED)
@@ -1287,6 +1324,15 @@ class PGN_GUI(Frame):
         self.KeyForward.config(state = DISABLED)
         self.KeyForward5.config(state = DISABLED)
         self.KeyEnd.config(state = DISABLED)
+
+    def unBindKeys(self):
+        self.master.unbind("<KeyPress-6>")
+        self.master.unbind("<KeyPress-space>")
+        self.master.unbind("<KeyPress-4>")
+        self.master.unbind("<KeyPress-9>")
+        self.master.unbind("<KeyPress-7>")
+        self.master.unbind("<KeyPress-8>")
+        self.master.unbind("<KeyPress-5>")
 
     def exitGame(self, event=None):
         """Game-Exit"""
