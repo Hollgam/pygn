@@ -35,6 +35,7 @@ class PGN_GUI(Frame):
         self.currentPosition = createStartPosition()
 
         self.font1 = "14"
+        self.font2 = "Helvetica 9"
         self.infoRightFont = "Helvetica 9 bold"
         self.infoLeftFont = "Helvetica 9"
 
@@ -83,6 +84,11 @@ class PGN_GUI(Frame):
             self.imageTakenBlackPawn = PhotoImage(file = "img/set1/taken/bp.png")
         except:
             print "Falied to load files from \\img\\set1 folder"
+
+        try:
+            self.imageLogo = PhotoImage(file = "img/logo/gcodelogo.jpg")
+        except:
+            print "Falied to load images from \\img\\logo folder"
 
         self.master.bind("<Control-Key-O>", self.loadGame)
         self.master.bind("<Control-Key-o>", self.loadGame)
@@ -1240,7 +1246,23 @@ class PGN_GUI(Frame):
 
     def showAbout(self):
         """Help-About"""
-        showinfo("About", "Made by Hollgam and Vinchkovsky \nVersion: %s\nPython 2.6.1\nAdditional modules: Tkinter, tkMessageBox, PMW, PIL" % __version__)
+        aboutWindow = Toplevel()
+        aboutWindow.title('About')
+        aboutWindow.resizable(0, 0)
+        ws = self.master.winfo_screenwidth()
+        hs = self.master.winfo_screenheight()
+        sizeStr = "250x170+" + str(ws/2-125) + "+" + str(hs/2-75)
+        aboutWindow.geometry(sizeStr)
+        aboutWindow.iconbitmap('img/favicon.ico')
+        aboutWindow.config(bg=self.takenPiecesBackground)
+
+        logoLabel = Label(aboutWindow, image = self.imageLogo, bd=0)
+        logoLabel.pack(side = TOP)
+
+        aboutText = "Created by:\n   Hollgam (hollgam.com)\n   Vinchkovsky \nVersion: %s\nLanguage: Python 2.6.1\nAdditional modules: Tkinter, tkMessageBox, PMW, PIL" % __version__
+        aboutlabel = Label(aboutWindow, text = aboutText, wraplength=250, justify=LEFT, bg=self.takenPiecesBackground, font= self.font2)
+        aboutlabel.pack(side = TOP)
+        #showinfo("About", "Made by Hollgam and Vinchkovsky \nVersion: %s\nPython 2.6.1\nAdditional modules: Tkinter, tkMessageBox, PMW, PIL" % __version__)
 
     def showKeys(self):
         """Help-About"""
@@ -1339,6 +1361,7 @@ class PGN_GUI(Frame):
         self.destroy()
         sys.exit(1)
 
+
 def invalidMove(type=0):
     """
     shows different errors in chess logic of moves
@@ -1398,6 +1421,7 @@ def main():
 #    fileToLoad = "1.pgn"
 
     PGN_GUI().mainloop()
+
 
 if __name__ == "__main__":
     main()
