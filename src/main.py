@@ -47,7 +47,7 @@ class PGN_GUI(Frame):
 
         self.noBlackLastMove = 0
 
-        
+
         self.middleListPos = 7
         self.buttonHC = 1.0
 
@@ -222,13 +222,13 @@ class PGN_GUI(Frame):
         self.moveListFrame.grid(row=0,column=0,sticky=NW)
         self.vscrollbar = Scrollbar(self.moveListFrame)
         self.vscrollbar.grid(row=0, column=1, sticky=N+S, pady=4)
-        self.canvas = Canvas(self.moveListFrame,yscrollcommand=self.vscrollbar.set,height=315 ,width=196)
-        self.canvas.grid(row=0, column=0, sticky=N+S+E+W, pady=4)
-        self.vscrollbar.config(command=self.canvas.yview)
-        self.frameList = Frame(self.canvas)
-        self.canvas.create_window(0, 0, anchor=NW, window=self.frameList)
+        self.listCanvas = Canvas(self.moveListFrame,yscrollcommand=self.vscrollbar.set,height=315 ,width=196)
+        self.listCanvas.grid(row=0, column=0, sticky=N+S+E+W, pady=4)
+        self.vscrollbar.config(command=self.listCanvas.yview)
+        self.frameList = Frame(self.listCanvas)
+        self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
         self.frameList.update_idletasks()
-        self.canvas.config(scrollregion=self.canvas.bbox("all"))
+        self.listCanvas.config(scrollregion=self.listCanvas.bbox("all"))
 
         #FRAME SHOWING TAKEN PIECES
         self.numberWhiteTaken = 0
@@ -377,12 +377,12 @@ class PGN_GUI(Frame):
             from inc.chessengine import moveNumber
             maxNumber = moveNumber
             stopOnWhite = 1
-            
+
             if firstTime:
                 self.loadMoveList()
 
-            self.canvas.yview(MOVETO,1.0)
-            self.prevButton.config(background=self.canvas["background"])
+            self.listCanvas.yview(MOVETO,1.0)
+            self.prevButton.config(background=self.listCanvas["background"])
             self.buttonsDic[(maxNumber,not self.noBlackLastMove)].config(background=self.colorSelected)
             self.prevButton=self.buttonsDic[(maxNumber,not self.noBlackLastMove)]
 
@@ -391,13 +391,13 @@ class PGN_GUI(Frame):
         rows = maxNumber
         self.noBlackLastMove = 0
         self.buttonHC = self.buttonHC/(2.0*maxNumber)
-        self.vscrollbar.config(command=self.canvas.yview)
-        self.frameList = Frame(self.canvas)
-        self.canvas.create_window(0, 0, anchor=NW, window=self.frameList)
+        self.vscrollbar.config(command=self.listCanvas.yview)
+        self.frameList = Frame(self.listCanvas)
+        self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
         self.frameList.update_idletasks()
 
-        self.canvas.config(scrollregion=self.canvas.bbox("all"))
-        
+        self.listCanvas.config(scrollregion=self.listCanvas.bbox("all"))
+
         self.buttonsDic = {}
         for i in range(1,rows+1):
             for j in range(1,4):
@@ -427,18 +427,18 @@ class PGN_GUI(Frame):
                             self.button.bind("<Button-1>",self.changePositionList)
                             self.buttonsDic[(i, j-2)] = self.button
 
-        self.canvas.create_window(0, 0, anchor=NW, window=self.frameList)
+        self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
         self.frameList.update_idletasks()
-        self.canvas.config(scrollregion=self.canvas.bbox("all"))
+        self.listCanvas.config(scrollregion=self.listCanvas.bbox("all"))
 
         self.buttonsDic[(1, 0)].update()
-        self.middleListPos = int(round(int(self.canvas["height"])/(2.0*self.buttonsDic[(1, 0)].winfo_height())))
+        self.middleListPos = int(round(int(self.listCanvas["height"])/(2.0*self.buttonsDic[(1, 0)].winfo_height())))
 
     def changePositionList(self,event):
         global stopOnWhite
         moveN = int(event.widget.winfo_name()[:len(event.widget.winfo_name())-1])
         color = event.widget.winfo_name()[-1]
-        self.prevButton.config(background=self.canvas["background"])
+        self.prevButton.config(background=self.listCanvas["background"])
         event.widget.config(background=self.colorSelected)
         self.prevButton=event.widget
         print moveN,color
@@ -467,17 +467,17 @@ class PGN_GUI(Frame):
         changes = playGame(self.gameLine , 0, 0)
         stopOnWhite = 1
         self.changeImages(changes)
-        self.canvas.yview(MOVETO,0.0)
-        self.prevButton.config(background=self.canvas["background"])
+        self.listCanvas.yview(MOVETO,0.0)
+        self.prevButton.config(background=self.listCanvas["background"])
 
 
     def moveBack(self):
         global stopOnWhite, tempCounter
         from inc.chessengine import board, moveNumber
         if maxNumber-moveNumber+1>=self.middleListPos-1+stopOnWhite:
-            self.canvas.yview(MOVETO,((moveNumber-self.middleListPos-1)*2+stopOnWhite)*self.buttonHC)
+            self.listCanvas.yview(MOVETO,((moveNumber-self.middleListPos-1)*2+stopOnWhite)*self.buttonHC)
         else:
-            self.canvas.yview(MOVETO,1.0)
+            self.listCanvas.yview(MOVETO,1.0)
 
         if not (stopOnWhite == 1 and moveNumber == 0):
             createStartPosition()
@@ -499,7 +499,7 @@ class PGN_GUI(Frame):
                     self.changeImages(changes)
                 else:
                     invalidMove(changes)
-            self.prevButton.config(background=self.canvas["background"])
+            self.prevButton.config(background=self.listCanvas["background"])
             if not (playTo == 0 and stopOnWhite==1):
                 self.buttonsDic[(playTo,stopOnWhite)].config(background=self.colorSelected)
                 self.prevButton=self.buttonsDic[(playTo,stopOnWhite)]
@@ -509,9 +509,9 @@ class PGN_GUI(Frame):
         from inc.chessengine import board, moveNumber
 
         if maxNumber-moveNumber+5 >= self.middleListPos:
-            self.canvas.yview(MOVETO,((moveNumber-self.middleListPos-5)*2)*self.buttonHC)
+            self.listCanvas.yview(MOVETO,((moveNumber-self.middleListPos-5)*2)*self.buttonHC)
         else:
-            self.canvas.yview(MOVETO,1.0)
+            self.listCanvas.yview(MOVETO,1.0)
 
         if  moveNumber >= 5 and not (stopOnWhite == 0 and moveNumber == 5):
             createStartPosition()
@@ -530,7 +530,7 @@ class PGN_GUI(Frame):
                 else:
                     invalidMove(changes)
 
-            self.prevButton.config(background=self.canvas["background"])
+            self.prevButton.config(background=self.listCanvas["background"])
             if not (playTo == 0 and stopOnWhite==1):
                 self.buttonsDic[(playTo,stopOnWhite)].config(background=self.colorSelected)
                 self.prevButton=self.buttonsDic[(playTo,stopOnWhite)]
@@ -544,7 +544,7 @@ class PGN_GUI(Frame):
                     self.changeImages(changes)
                 else:
                     invalidMove(changes)
-            self.prevButton.config(background=self.canvas["background"])
+            self.prevButton.config(background=self.listCanvas["background"])
 
 
 
@@ -554,9 +554,9 @@ class PGN_GUI(Frame):
         from inc.chessengine import board, moveNumber
 
         if moveNumber+stopOnWhite >= self.middleListPos:
-            self.canvas.yview(MOVETO,((moveNumber-self.middleListPos-1)*2+stopOnWhite)*self.buttonHC)
+            self.listCanvas.yview(MOVETO,((moveNumber-self.middleListPos-1)*2+stopOnWhite)*self.buttonHC)
         else:
-            self.canvas.yview(MOVETO,0.0)
+            self.listCanvas.yview(MOVETO,0.0)
 
         if not (moveNumber == maxNumber and stopOnWhite == 1):
             createStartPosition()
@@ -578,7 +578,7 @@ class PGN_GUI(Frame):
                     self.changeImages(changes)
                 else:
                     invalidMove(changes)
-            self.prevButton.config(background=self.canvas["background"])
+            self.prevButton.config(background=self.listCanvas["background"])
             self.buttonsDic[(playTo,stopOnWhite)].config(background=self.colorSelected)
             self.prevButton=self.buttonsDic[(playTo,stopOnWhite)]
 
@@ -586,11 +586,11 @@ class PGN_GUI(Frame):
         global stopOnWhite
         global maxNumber
         from inc.chessengine import board, moveNumber
-        
+
         if moveNumber+5 >= self.middleListPos:
-            self.canvas.yview(MOVETO,((moveNumber-self.middleListPos+5)*2)*self.buttonHC)
+            self.listCanvas.yview(MOVETO,((moveNumber-self.middleListPos+5)*2)*self.buttonHC)
         else:
-            self.canvas.yview(MOVETO,0.0)
+            self.listCanvas.yview(MOVETO,0.0)
 
         if moveNumber <= maxNumber - 5:
             createStartPosition()
@@ -608,7 +608,7 @@ class PGN_GUI(Frame):
                     self.changeImages(changes)
                 else:
                     invalidMove(changes)
-            self.prevButton.config(background=self.canvas["background"])
+            self.prevButton.config(background=self.listCanvas["background"])
             self.buttonsDic[(playTo,stopOnWhite)].config(background=self.colorSelected)
             self.prevButton=self.buttonsDic[(playTo,stopOnWhite)]
         else:
@@ -621,7 +621,7 @@ class PGN_GUI(Frame):
                     self.changeImages(changes)
                 else:
                     invalidMove(changes)
-            self.prevButton.config(background=self.canvas["background"])
+            self.prevButton.config(background=self.listCanvas["background"])
             self.buttonsDic[(maxNumber,1)].config(background=self.colorSelected)
             self.prevButton=self.buttonsDic[(maxNumber,1)]
 
@@ -816,7 +816,7 @@ class PGN_GUI(Frame):
                     print "Falied to load files from \\img\\set2\\small folder"
 
             self.sideBar["height"] = 310
-            self.canvas["height"] = 195
+            self.listCanvas["height"] = 195
             self.canvasInfo["height"] = 298
 
         elif self.selectedBoardSize.get() == "Default":
@@ -856,7 +856,7 @@ class PGN_GUI(Frame):
                 except:
                     print "Falied to load files from \\img\\set2\\default folder"
             self.sideBar["height"] = 430
-            self.canvas["height"] = 315
+            self.listCanvas["height"] = 315
             self.canvasInfo["height"] = 418
 
         elif self.selectedBoardSize.get() == "Large":
@@ -896,7 +896,7 @@ class PGN_GUI(Frame):
                 except:
                     print "Falied to load files from \\img\\set2\\large folder"
             self.sideBar["height"] = 550
-            self.canvas["height"] = 435
+            self.listCanvas["height"] = 435
             self.canvasInfo["height"] = 538
 
         for i in range(8):
@@ -920,13 +920,13 @@ class PGN_GUI(Frame):
         self.notebook.setnaturalsize()
 
         self.buttonsDic[(1, 0)].update()
-        self.middleListPos = int(round(int(self.canvas["height"])/(2.0*self.buttonsDic[(1, 0)].winfo_height())))
+        self.middleListPos = int(round(int(self.listCanvas["height"])/(2.0*self.buttonsDic[(1, 0)].winfo_height())))
 
     def changeColorScheme(self):
         if self.selectedColorScheme.get() == "Set 1":
             if self.selectedBoardSize.get() == "Small":
                 try:
-                    
+
                     self.imageEmpty = PhotoImage(file = "img/set1/small/empty.gif")
                     self.imageWhiteRock = PhotoImage(file = "img/set1/small/wr.png")
                     self.imageBlackRock = PhotoImage(file = "img/set1/small/br.png")
@@ -1243,11 +1243,11 @@ class PGN_GUI(Frame):
 #        #LIST OF MOVES
 #        self.moveListFrame.grid(row=0,column=0,sticky=NW)
 #        self.vscrollbar.grid(row=0, column=1, sticky=N+S, pady=4)
-#        self.canvas.grid(row=0, column=0, sticky=N+S+E+W, pady=4)
-#        self.vscrollbar.config(command=self.canvas.yview)
-#        self.canvas.create_window(0, 0, anchor=NW, window=self.frameList)
+#        self.listCanvas.grid(row=0, column=0, sticky=N+S+E+W, pady=4)
+#        self.vscrollbar.config(command=self.listCanvas.yview)
+#        self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
 #        self.frameList.update_idletasks()
-#        self.canvas.config(scrollregion=self.canvas.bbox("all"))
+#        self.listCanvas.config(scrollregion=self.listCanvas.bbox("all"))
 #
 #        #FRAME SHOWING TAKEN PIECES
 #        self.numberWhiteTaken = 0
