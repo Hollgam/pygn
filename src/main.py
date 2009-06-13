@@ -33,6 +33,8 @@ class PGN_GUI(Frame):
         self.sideBarWidth = 220
         self.boardFliped  = 0
         self.currentPosition = createStartPosition()
+        self.notesFile = 0
+        self.notesImported = 0
 
         self.font1 = "14"
         self.font2 = "Helvetica 9"
@@ -282,6 +284,15 @@ class PGN_GUI(Frame):
 
         #NOTES
         self.infoPage = self.notebook.add('Notes       ')
+
+        self.textEntry = Pmw.ScrolledText( self.infoPage, text_width = 25, text_height = 12, text_wrap = WORD,hscrollmode = "none", vscrollmode = "static" )
+        self.textEntry.pack( side = TOP, expand = YES, fill = BOTH)
+#        self.buttonLoadNotes = Button(self.infoPage,text='Load',name='loadNotes',command = self.loadNotes, state = ACTIVE)
+#        self.buttonLoadNotes.pack(side=LEFT, fill=BOTH, expand=1)
+        self.buttonSaveNotes = Button(self.infoPage,text='Save',name='saveNotes',command = self.saveNotes, state = DISABLED)
+        self.buttonSaveNotes.pack(side=LEFT, fill=BOTH, expand=1)
+        self.buttonClearNotes = Button(self.infoPage,text='Clear',name='clearNotes',command = self.clearNotes, state = DISABLED)
+        self.buttonClearNotes.pack(side=LEFT, fill=BOTH, expand=1)
 
 
         self.notebook.setnaturalsize()
@@ -1274,13 +1285,18 @@ class PGN_GUI(Frame):
         #fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
 
         fileToLoad  = "1.pgn"
+        notesToLoad = fileToLoad + "n"
+        self.notesFile = notesToLoad
+        self.loadNotes()
         self.gameLine = readFileLine(fileToLoad)
         self.gameInfo = readInfoFromFile(fileToLoad)
+        self.loadNotes()
         self.makeButtonsActive()
         self.showLastPosition(1)
         self.showInfoAboutGame()
 
     def closeGame(self, event= None):
+        self.saveNotes()
         clearAll()
         self.unBindKeys()
         self.__init__()
@@ -1330,14 +1346,22 @@ class PGN_GUI(Frame):
         self.KeyForward5.config(state = ACTIVE)
         self.KeyEnd.config(state = ACTIVE)
 
-        #click on the buttons
-        self.master.bind("<KeyPress-6>", self.moveForward)
-        self.master.bind("<KeyPress-space>", self.moveForward)
-        self.master.bind("<KeyPress-4>", self.moveBack)
-        self.master.bind("<KeyPress-9>", self.moveForward5)
-        self.master.bind("<KeyPress-7>", self.moveBack5)
-        self.master.bind("<KeyPress-8>", self.showLastPosition)
-        self.master.bind("<KeyPress-5>", self.showStartPosition)
+#        #click on the buttons
+#        self.buttonsFrame.bind("<KeyPress-6>", self.moveForward)
+#        self.buttonsFrame.bind("<KeyPress-space>", self.moveForward)
+#        self.buttonsFrame.bind("<KeyPress-4>", self.moveBack)
+#        self.buttonsFrame.bind("<KeyPress-9>", self.moveForward5)
+#        self.buttonsFrame.bind("<KeyPress-7>", self.moveBack5)
+#        self.buttonsFrame.bind("<KeyPress-8>", self.showLastPosition)
+#        self.buttonsFrame.bind("<KeyPress-5>", self.showStartPosition)
+
+#        self.textEntry.bind("<KeyPress-6>", self.doN)
+#        self.textEntry.bind("<KeyPress-space>", self.doN)
+#        self.textEntry.bind("<KeyPress-4>", self.doN)
+#        self.textEntry.bind("<KeyPress-9>", self.doN)
+#        self.textEntry.bind("<KeyPress-7>", self.doN)
+#        self.textEntry.bind("<KeyPress-8>", self.doN)
+#        self.textEntry.bind("<KeyPress-5>", self.doN)
 
     def makeButtonsDisabled(self):
         self.KeyStart.config(state = DISABLED)
@@ -1346,20 +1370,43 @@ class PGN_GUI(Frame):
         self.KeyForward.config(state = DISABLED)
         self.KeyForward5.config(state = DISABLED)
         self.KeyEnd.config(state = DISABLED)
+        self.buttonSaveNotes.config(state=DISABLED)
 
     def unBindKeys(self):
-        self.master.unbind("<KeyPress-6>")
-        self.master.unbind("<KeyPress-space>")
-        self.master.unbind("<KeyPress-4>")
-        self.master.unbind("<KeyPress-9>")
-        self.master.unbind("<KeyPress-7>")
-        self.master.unbind("<KeyPress-8>")
-        self.master.unbind("<KeyPress-5>")
+#        self.master.unbind("<KeyPress-6>")
+#        self.master.unbind("<KeyPress-space>")
+#        self.master.unbind("<KeyPress-4>")
+#        self.master.unbind("<KeyPress-9>")
+#        self.master.unbind("<KeyPress-7>")
+#        self.master.unbind("<KeyPress-8>")
+#        self.master.unbind("<KeyPress-5>")
+        pass
+
+    def loadNotes(self):
+        self.clearNotes()
+        try:
+            self.textEntry.importfile(self.notesFile)
+            self.notesImported = 1
+        except:
+            pass
+        self.buttonSaveNotes.config(state=ACTIVE)
+        self.buttonClearNotes.config(state=ACTIVE)
+
+    def clearNotes(self):
+        self.textEntry.clear()
+
+
+    def saveNotes(self):
+        if self.notesFile:
+            self.textEntry.exportfile(self.notesFile)
 
     def exitGame(self, event=None):
         """Game-Exit"""
         self.destroy()
         sys.exit(1)
+
+    def doN(self, event=None):
+        pass
 
 
 def invalidMove(type=0):
