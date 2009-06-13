@@ -228,8 +228,8 @@ class PGN_GUI(Frame):
         self.notebook.grid(column=1 , row=1,sticky=NW, rowspan=2)
 
         # Add the "Appearance" page to the notebook.
-        self.movePage = self.notebook.add('Moves       ')
-        self.notebook.tab('Moves       ').focus_set()
+        self.movePage = self.notebook.add('Moves   ')
+        self.notebook.tab('Moves   ').focus_set()
 
         self.sideBar = Frame(self.movePage, width=self.sideBarWidth, height=430)
         self.sideBar.grid(column=1 , row=1,sticky=NW, rowspan=2)
@@ -265,7 +265,7 @@ class PGN_GUI(Frame):
 
 
         #INFO ABOUT GAME
-        self.infoPage = self.notebook.add('Info        ')
+        self.infoPage = self.notebook.add('Info      ')
 
         self.infoFrame = Frame(self.infoPage)
         self.infoFrame.grid(row=0,column=0,sticky=NW)
@@ -282,8 +282,11 @@ class PGN_GUI(Frame):
         self.noInfoLabel = Label(self.infoList, text = "Load game to see info about it.", font=self.infoLeftFont)
         self.noInfoLabel.grid(row=0,column=0, sticky=W, padx=1)
 
+        #LIST OF GAMES
+        self.gamesPage = self.notebook.add('Games   ')
+        
         #NOTES
-        self.infoPage = self.notebook.add('Notes       ')
+        self.infoPage = self.notebook.add('Notes   ')
 
         self.textEntry = Pmw.ScrolledText( self.infoPage, text_width = 25, text_height = 12, text_wrap = WORD,hscrollmode = "none", vscrollmode = "static" )
         self.textEntry.pack( side = TOP, expand = YES, fill = BOTH)
