@@ -47,6 +47,7 @@ class PGN_GUI(Frame):
 
         self.noBlackLastMove = 0
 
+        
         self.middleListPos = 7
         self.buttonHC = 1.0
 
@@ -425,6 +426,9 @@ class PGN_GUI(Frame):
                 self.canvas.create_window(0, 0, anchor=NW, window=self.frameList)
                 self.frameList.update_idletasks()
                 self.canvas.config(scrollregion=self.canvas.bbox("all"))
+
+                self.buttonsDic[(1, 0)].update()
+                self.middleListPos = int(round(int(self.canvas["height"])/(2.0*self.buttonsDic[(1, 0)].winfo_height())))
 
             self.canvas.yview(MOVETO,1.0)
             self.prevButton.config(background=self.canvas["background"])
@@ -916,6 +920,8 @@ class PGN_GUI(Frame):
 
         self.notebook.setnaturalsize()
 
+        self.buttonsDic[(1, 0)].update()
+        self.middleListPos = int(round(int(self.canvas["height"])/(2.0*self.buttonsDic[(1, 0)].winfo_height())))
 
     def changeColorScheme(self):
         if self.selectedColorScheme.get() == "Set 1":
