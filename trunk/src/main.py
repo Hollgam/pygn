@@ -377,63 +377,62 @@ class PGN_GUI(Frame):
             from inc.chessengine import moveNumber
             maxNumber = moveNumber
             stopOnWhite = 1
-            print maxNumber, moveNumber
-            rows = maxNumber
+            
             if firstTime:
-                self.noBlackLastMove = 0
-                self.buttonHC = self.buttonHC/(2.0*maxNumber)
-                #self.vscrollbar = Scrollbar(self.moveListFrame)
-                #self.vscrollbar.grid(row=0, column=1, sticky=N+S)
-                #self.canvas = Canvas(self.moveListFrame,yscrollcommand=self.vscrollbar.set,height=300,width=150)
-                #self.canvas.grid(row=0, column=0, sticky=N+S+E+W)
-                self.vscrollbar.config(command=self.canvas.yview)
-                self.frameList = Frame(self.canvas)
-                self.canvas.create_window(0, 0, anchor=NW, window=self.frameList)
-                self.frameList.update_idletasks()
-                self.canvas.config(scrollregion=self.canvas.bbox("all"))
-
-                self.buttonsDic = {}
-
-                for i in range(1,rows+1):
-                    for j in range(1,4):
-                        if j==1:
-                            self.label = Label(self.frameList,text=str(i))
-                            self.label.grid(row=i,column=j)
-                        else:
-                            if j==2:
-                                posPoint = self.gameLine.find(" "+str(i)+".")+2+len(str(i))
-                                posSpace = self.gameLine.find(" ",posPoint)
-                                if posSpace == -1:
-                                    posSpace = len(self.gameLine)
-                                    self.noBlackLastMove = 1
-                                self.button = Button(self.frameList, padx=22, text=self.gameLine[posPoint:posSpace], name=str(i)+"0",relief=GROOVE)
-                                self.button.bind("<Button-1>",self.changePositionList)
-                                self.button.grid(row=i, column=j, sticky='news')
-
-                                self.buttonsDic[(i, j-2)] = self.button
-
-                            elif j==3:
-                                posEnd = self.gameLine.find(" "+str(i+1)+".", posSpace)
-                                if i==maxNumber:
-                                    posEnd = len(self.gameLine)
-                                if not self.noBlackLastMove:
-                                    self.button = Button(self.frameList, padx=22, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE)
-                                    self.button.grid(row=i, column=j, sticky='news')
-                                    self.button.bind("<Button-1>",self.changePositionList)
-
-                                    self.buttonsDic[(i, j-2)] = self.button
-
-                self.canvas.create_window(0, 0, anchor=NW, window=self.frameList)
-                self.frameList.update_idletasks()
-                self.canvas.config(scrollregion=self.canvas.bbox("all"))
-
-                self.buttonsDic[(1, 0)].update()
-                self.middleListPos = int(round(int(self.canvas["height"])/(2.0*self.buttonsDic[(1, 0)].winfo_height())))
+                self.loadMoveList()
 
             self.canvas.yview(MOVETO,1.0)
             self.prevButton.config(background=self.canvas["background"])
             self.buttonsDic[(maxNumber,not self.noBlackLastMove)].config(background=self.colorSelected)
             self.prevButton=self.buttonsDic[(maxNumber,not self.noBlackLastMove)]
+
+    def loadMoveList(self):
+        global maxNumber, stopOnWhite
+        rows = maxNumber
+        self.noBlackLastMove = 0
+        self.buttonHC = self.buttonHC/(2.0*maxNumber)
+        self.vscrollbar.config(command=self.canvas.yview)
+        self.frameList = Frame(self.canvas)
+        self.canvas.create_window(0, 0, anchor=NW, window=self.frameList)
+        self.frameList.update_idletasks()
+
+        self.canvas.config(scrollregion=self.canvas.bbox("all"))
+        
+        self.buttonsDic = {}
+        for i in range(1,rows+1):
+            for j in range(1,4):
+                if j==1:
+                    self.label = Label(self.frameList,text=str(i))
+                    self.label.grid(row=i,column=j)
+                else:
+                    if j==2:
+                        posPoint = self.gameLine.find(" "+str(i)+".")+2+len(str(i))
+                        posSpace = self.gameLine.find(" ",posPoint)
+                        if posSpace == -1:
+                            posSpace = len(self.gameLine)
+                            self.noBlackLastMove = 1
+                        self.button = Button(self.frameList, padx=22, text=self.gameLine[posPoint:posSpace], name=str(i)+"0",relief=GROOVE)
+                        self.button.bind("<Button-1>",self.changePositionList)
+                        self.button.grid(row=i, column=j, sticky='news')
+
+                        self.buttonsDic[(i, j-2)] = self.button
+
+                    elif j==3:
+                        posEnd = self.gameLine.find(" "+str(i+1)+".", posSpace)
+                        if i==maxNumber:
+                            posEnd = len(self.gameLine)
+                        if not self.noBlackLastMove:
+                            self.button = Button(self.frameList, padx=22, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE)
+                            self.button.grid(row=i, column=j, sticky='news')
+                            self.button.bind("<Button-1>",self.changePositionList)
+                            self.buttonsDic[(i, j-2)] = self.button
+
+        self.canvas.create_window(0, 0, anchor=NW, window=self.frameList)
+        self.frameList.update_idletasks()
+        self.canvas.config(scrollregion=self.canvas.bbox("all"))
+
+        self.buttonsDic[(1, 0)].update()
+        self.middleListPos = int(round(int(self.canvas["height"])/(2.0*self.buttonsDic[(1, 0)].winfo_height())))
 
     def changePositionList(self,event):
         global stopOnWhite
