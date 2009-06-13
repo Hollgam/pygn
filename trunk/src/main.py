@@ -86,7 +86,7 @@ class PGN_GUI(Frame):
             print "Falied to load files from \\img\\set1 folder"
 
         try:
-            self.imageLogo = PhotoImage(file = "img/logo/gcodelogo.jpg")
+            self.imageLogo = PhotoImage(file = "img/logo/gcodelogo.png")
         except:
             print "Falied to load images from \\img\\logo folder"
 
