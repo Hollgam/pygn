@@ -102,7 +102,7 @@ class PGN_GUI(Frame):
         self.master.title('PyGN')
         self.master.iconbitmap('img/favicon.ico')
 
-    
+
         # HEADER
         self.headerFrame = Frame(self)
         self.headerFrame.grid(column=0 , row=0, sticky = W+N)
@@ -417,7 +417,7 @@ class PGN_GUI(Frame):
         global maxNumber, stopOnWhite
         rows = maxNumber
         self.noBlackLastMove = 0
-        self.buttonHC = self.buttonHC/(2.0*maxNumber)
+        self.buttonHC = 1/(2.0*maxNumber)
         self.vscrollbar.config(command=self.listCanvas.yview)
         self.frameList = Frame(self.listCanvas)
         self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
@@ -749,7 +749,7 @@ class PGN_GUI(Frame):
             self.notebook.grid()
         elif self.selectedShowSidebar.get() == "No":
             self.notebook.grid_remove()
-            
+
 #        if self.selectedShowSidebar.get() == "Yes":
 #            self.selectedShowSidebar.set("No")
 #        elif self.selectedShowSidebar.get() == "No":
