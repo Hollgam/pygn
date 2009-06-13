@@ -1251,7 +1251,7 @@ class PGN_GUI(Frame):
         aboutWindow.resizable(0, 0)
         ws = self.master.winfo_screenwidth()
         hs = self.master.winfo_screenheight()
-        sizeStr = "250x170+" + str(ws/2-125) + "+" + str(hs/2-75)
+        sizeStr = "250x150+" + str(ws/2-125) + "+" + str(hs/2-75)
         aboutWindow.geometry(sizeStr)
         aboutWindow.iconbitmap('img/favicon.ico')
         aboutWindow.config(bg=self.takenPiecesBackground)
@@ -1259,7 +1259,7 @@ class PGN_GUI(Frame):
         logoLabel = Label(aboutWindow, image = self.imageLogo, bd=0)
         logoLabel.pack(side = TOP)
 
-        aboutText = "Created by:\n   Hollgam (hollgam.com)\n   Vinchkovsky \nVersion: %s\nLanguage: Python 2.6.1\nAdditional modules: Tkinter, tkMessageBox, PMW, PIL" % __version__
+        aboutText = "Created by:\n   Hollgam (hollgam.com)\n   Vinchkovsky \nVersion: %s\nLanguage: Python 2.6.1\nAdditional modules: Tkinter, PMW, PIL" % __version__
         aboutlabel = Label(aboutWindow, text = aboutText, wraplength=250, justify=LEFT, bg=self.takenPiecesBackground, font= self.font2)
         aboutlabel.pack(side = TOP)
         #showinfo("About", "Made by Hollgam and Vinchkovsky \nVersion: %s\nPython 2.6.1\nAdditional modules: Tkinter, tkMessageBox, PMW, PIL" % __version__)
