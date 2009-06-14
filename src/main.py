@@ -284,10 +284,11 @@ class PGN_GUI(Frame):
 
         #LIST OF GAMES
         self.gamesPage = self.notebook.add('Games   ')
-        self.gamesList = Pmw.ScrolledListBox(self.gamesPage)
+        self.gamesList = Pmw.ScrolledListBox(self.gamesPage,dblclickcommand=self.gameListClick)
         self.gamesList.pack(side = TOP, expand = YES, fill = BOTH)
         self.loadGamesList()
-
+#        self.fileDic = {} #dictionary for files, format: info about file:path
+        self.fileToLoad = ''
         #NOTES
         self.infoPage = self.notebook.add('Notes   ')
 
@@ -303,31 +304,47 @@ class PGN_GUI(Frame):
         self.notebook.setnaturalsize()
 
     def loadGamesList(self):
+        self.fileDic = {}
         fileListName = "files.list"
-        filesList = []
-        info = {}
+        self.filesList = []
         if os.path.isfile(fileListName):
+            #READ
             fileIn = open(fileListName,"r")
             for line in fileIn:
-                filesList += [line]
-            print filesList
+                self.filesList += [line]
+            print self.filesList
             #clear list
             allClear = 0
             while not allClear:
                 allClear = 1
-                for file in filesList:
+                for file in self.filesList:
                     if not os.path.isfile(file[0:file.find('#')]):
                         print "remove",file
-                        filesList.remove(file)
+                        self.filesList.remove(file)
                         allClear = 0
-            print filesList
+            print self.filesList
             #add items to file list
-            for item in filesList:
+            for item in self.filesList:
                 self.gamesList.insert(END,item[item.find("#")+1:])
+                self.fileDic[item[item.find("#")+1:]]=item[:item.find("#")]
+            print self.fileDic
+            fileIn.close()
+            #WRITE
+            fileIn = open(fileListName,"w")
+            for line in self.filesList:
+                fileIn.write(line)
+                print '*',line,'*'
+            fileIn.close()
         else:
             print "FILE COULD NOT BE OPENED"
             return 'ERROR'
 
+    def gameListClick(self):
+        for line in self.gamesList.getcurselection():
+#            print self.fileDic['blablabla']
+            self.loadGame(self.fileDic[line])
+            break
+    
     def createBoard(self):
         self.buttons = []
         color =0
@@ -1312,11 +1329,15 @@ class PGN_GUI(Frame):
         showinfo("Keyboard shortcuts", "6 - Move forward\n4 - Move backwards\n9 - Move forward 5 moves\n7 - Move backwards 5 moves\n8 - Last position\n5 - Initial position\nSpace - Move forward\nCtrl+O - Load a game\nCtrl+Q - Close a game")
 
 
-    def loadGame(self, event= None):
+    def loadGame(self, event= None,fileToLoad="none"):
         # window for choosing file to laod
         #fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
-
-        fileToLoad  = "1.pgn"
+        if fileToLoad=="none":
+            fileToLoad  = "1.pgn"
+            try:
+                print self.fileDic[fileToLoad]
+            except:
+                pass
         notesToLoad = fileToLoad + "n"
         self.notesFile = notesToLoad
         self.loadNotes()
