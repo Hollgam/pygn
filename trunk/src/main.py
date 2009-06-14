@@ -284,7 +284,10 @@ class PGN_GUI(Frame):
 
         #LIST OF GAMES
         self.gamesPage = self.notebook.add('Games   ')
-        
+        self.gamesList = Pmw.ScrolledListBox(self.gamesPage)
+        self.gamesList.pack(side = TOP, expand = YES, fill = BOTH)
+        self.loadGamesList()
+
         #NOTES
         self.infoPage = self.notebook.add('Notes   ')
 
@@ -297,8 +300,33 @@ class PGN_GUI(Frame):
         self.buttonClearNotes = Button(self.infoPage,text='Clear',name='clearNotes',command = self.clearNotes, state = DISABLED)
         self.buttonClearNotes.pack(side=LEFT, fill=BOTH, expand=1)
 
-
         self.notebook.setnaturalsize()
+
+    def loadGamesList(self):
+        fileListName = "files.list"
+        filesList = []
+        info = {}
+        if os.path.isfile(fileListName):
+            fileIn = open(fileListName,"r")
+            for line in fileIn:
+                filesList += [line]
+            print filesList
+            #clear list
+            allClear = 0
+            while not allClear:
+                allClear = 1
+                for file in filesList:
+                    if not os.path.isfile(file[0:file.find('#')]):
+                        print "remove",file
+                        filesList.remove(file)
+                        allClear = 0
+            print filesList
+            #add items to file list
+            for item in filesList:
+                self.gamesList.insert(END,item[item.find("#")+1:])
+        else:
+            print "FILE COULD NOT BE OPENED"
+            return 'ERROR'
 
     def createBoard(self):
         self.buttons = []
@@ -404,9 +432,9 @@ class PGN_GUI(Frame):
                 self.changeImages(lastPosition)
             else:
                 invalidMove(lastPosition)
-            from inc.chessengine import moveNumber
+            from inc.chessengine import moveNumber,noBlackMove
             maxNumber = moveNumber
-            stopOnWhite = 1
+            stopOnWhite = 1-noBlackMove
 
             if firstTime:
                 self.loadMoveList()
@@ -587,8 +615,8 @@ class PGN_GUI(Frame):
             self.listCanvas.yview(MOVETO,((moveNumber-self.middleListPos-1)*2+stopOnWhite)*self.buttonHC)
         else:
             self.listCanvas.yview(MOVETO,0.0)
-
-        if not (moveNumber == maxNumber and stopOnWhite == 1):
+        from inc.chessengine import noBlackMove
+        if not (moveNumber == maxNumber and stopOnWhite == 1-noBlackMove):
             createStartPosition()
             if stopOnWhite == 0:
                 playTo = moveNumber
@@ -645,15 +673,16 @@ class PGN_GUI(Frame):
             createStartPosition()
             if self.gameLine != 'ERROR':    #CHECK IN POS IF END ON WHITE!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 clearAll()                  #MAYBE EXCEPT "0" SMTH OTHER!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                changes = playGame(self.gameLine, maxNumber, 0)
-                stopOnWhite = 1
+                changes = playGame(self.gameLine, maxNumber)
+                from inc.chessengine import noBlackMove
+                stopOnWhite = 1-noBlackMove
                 if type(changes) != type(1):
                     self.changeImages(changes)
                 else:
                     invalidMove(changes)
             self.prevButton.config(background=self.listCanvas["background"])
-            self.buttonsDic[(maxNumber,1)].config(background=self.colorSelected)
-            self.prevButton=self.buttonsDic[(maxNumber,1)]
+            self.buttonsDic[(maxNumber,1-noBlackMove)].config(background=self.colorSelected)
+            self.prevButton=self.buttonsDic[(maxNumber,1-noBlackMove)]
 
     def changeImages(self, board):
         self.currentPosition = board

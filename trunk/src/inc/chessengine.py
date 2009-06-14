@@ -17,6 +17,7 @@ kingBlackCoord = [0,4] # initial coordinates of black king
 promotionMode = ''
 passingMoveAvailable = ''
 coordEmpty = []
+noBlackMove = 1
 
 lastPosition1 = [9,9]
 lastPosition2 = [9,9]
@@ -1605,7 +1606,7 @@ def changePosition(moveLine):
 def playGame(gameList, playToNumber=-1, whiteLast=0):
     moveWhite = 0
     moveBlack = 0
-    global moveNumber, board
+    global moveNumber, board,noBlackMove
     numberCounter = 1
     moveNumber = 0
     currentNumberInLine = ''
