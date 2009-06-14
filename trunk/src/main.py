@@ -305,11 +305,12 @@ class PGN_GUI(Frame):
 
     def loadGamesList(self):
         self.fileDic = {}
-        fileListName = "files.list"
+        self.fileDicRev = {}
+        self.fileListName = "files.list"
         self.filesList = []
-        if os.path.isfile(fileListName):
+        if os.path.isfile(self.fileListName):
             #READ
-            fileIn = open(fileListName,"r")
+            fileIn = open(self.fileListName,"r")
             for line in fileIn:
                 self.filesList += [line]
             print self.filesList
@@ -325,15 +326,17 @@ class PGN_GUI(Frame):
             print self.filesList
             #add items to file list
             for item in self.filesList:
+                item = item.replace('\n','')
                 self.gamesList.insert(END,item[item.find("#")+1:])
                 self.fileDic[item[item.find("#")+1:]]=item[:item.find("#")]
+                self.fileDicRev[item[:item.find("#")]]=item[item.find("#")+1:]
             print self.fileDic
             fileIn.close()
             #WRITE
-            fileIn = open(fileListName,"w")
+            fileIn = open(self.fileListName,"w")
             for line in self.filesList:
+#                line = line.replace('\n','')
                 fileIn.write(line)
-                print '*',line,'*'
             fileIn.close()
         else:
             print "FILE COULD NOT BE OPENED"
@@ -341,7 +344,7 @@ class PGN_GUI(Frame):
 
     def gameListClick(self):
         for line in self.gamesList.getcurselection():
-#            print self.fileDic['blablabla']
+            print 'LINE',line,self.fileDic[line]
             self.loadGame(self.fileDic[line])
             break
     
@@ -442,6 +445,9 @@ class PGN_GUI(Frame):
         global maxNumber, stopOnWhite
         from inc.chessengine import board, moveNumber
         createStartPosition()
+        if firstTime:
+                from inc.chessengine import noBlackMove
+                self.noBlackMove2=noBlackMove
         if self.gameLine != 'ERROR':
             clearAll()
             lastPosition = playGame(self.gameLine)
@@ -449,9 +455,9 @@ class PGN_GUI(Frame):
                 self.changeImages(lastPosition)
             else:
                 invalidMove(lastPosition)
-            from inc.chessengine import moveNumber,noBlackMove
+            from inc.chessengine import moveNumber
             maxNumber = moveNumber
-            stopOnWhite = 1-noBlackMove
+            stopOnWhite = self.noBlackMove2
 
             if firstTime:
                 self.loadMoveList()
@@ -632,8 +638,8 @@ class PGN_GUI(Frame):
             self.listCanvas.yview(MOVETO,((moveNumber-self.middleListPos-1)*2+stopOnWhite)*self.buttonHC)
         else:
             self.listCanvas.yview(MOVETO,0.0)
-        from inc.chessengine import noBlackMove
-        if not (moveNumber == maxNumber and stopOnWhite == 1-noBlackMove):
+
+        if not (moveNumber == maxNumber and stopOnWhite == self.noBlackMove2):
             createStartPosition()
             if stopOnWhite == 0:
                 playTo = moveNumber
@@ -691,15 +697,15 @@ class PGN_GUI(Frame):
             if self.gameLine != 'ERROR':    #CHECK IN POS IF END ON WHITE!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 clearAll()                  #MAYBE EXCEPT "0" SMTH OTHER!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 changes = playGame(self.gameLine, maxNumber)
-                from inc.chessengine import noBlackMove
-                stopOnWhite = 1-noBlackMove
+
+                stopOnWhite = self.noBlackMove2
                 if type(changes) != type(1):
                     self.changeImages(changes)
                 else:
                     invalidMove(changes)
             self.prevButton.config(background=self.listCanvas["background"])
-            self.buttonsDic[(maxNumber,1-noBlackMove)].config(background=self.colorSelected)
-            self.prevButton=self.buttonsDic[(maxNumber,1-noBlackMove)]
+            self.buttonsDic[(maxNumber,self.noBlackMove2)].config(background=self.colorSelected)
+            self.prevButton=self.buttonsDic[(maxNumber,self.noBlackMove2)]
 
     def changeImages(self, board):
         self.currentPosition = board
@@ -1329,15 +1335,24 @@ class PGN_GUI(Frame):
         showinfo("Keyboard shortcuts", "6 - Move forward\n4 - Move backwards\n9 - Move forward 5 moves\n7 - Move backwards 5 moves\n8 - Last position\n5 - Initial position\nSpace - Move forward\nCtrl+O - Load a game\nCtrl+Q - Close a game")
 
 
-    def loadGame(self, event= None,fileToLoad="none"):
+    def loadGame(self, fileToLoad="none"):
         # window for choosing file to laod
         #fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
         if fileToLoad=="none":
             fileToLoad  = "1.pgn"
             try:
-                print self.fileDic[fileToLoad]
+                print self.fileDicRev[fileToLoad]
             except:
-                pass
+                someInfo = 'yoyoyo'
+                self.gamesList.insert(END,someInfo)
+                self.fileDicRev[fileToLoad]=someInfo
+                self.fileDic[someInfo]=fileToLoad
+                fileIn = open(self.fileListName,"w")
+                for line in self.filesList:
+                    line = line.replace('\n','')
+                    fileIn.write(line)
+                fileIn.write('\n'+fileToLoad+'#'+someInfo)
+                fileIn.close()
         notesToLoad = fileToLoad + "n"
         self.notesFile = notesToLoad
         self.loadNotes()
