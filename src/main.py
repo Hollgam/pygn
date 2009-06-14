@@ -49,7 +49,7 @@ class PGN_GUI(Frame):
         self.infoLabelsData = []
 
         self.noBlackLastMove = 0
-
+        self.noBlackMove2 = 0
 
         self.middleListPos = 7
         self.buttonHC = 1.0
@@ -445,19 +445,21 @@ class PGN_GUI(Frame):
         global maxNumber, stopOnWhite
         from inc.chessengine import board, moveNumber
         createStartPosition()
-        if firstTime:
-                from inc.chessengine import noBlackMove
-                self.noBlackMove2=noBlackMove
+        
         if self.gameLine != 'ERROR':
             clearAll()
             lastPosition = playGame(self.gameLine)
+            if firstTime:
+                from inc.chessengine import noBlackMove
+                self.noBlackMove2=noBlackMove
+                print "noBlackMove:",noBlackMove
             if type(lastPosition) != type(1):
                 self.changeImages(lastPosition)
             else:
                 invalidMove(lastPosition)
             from inc.chessengine import moveNumber
             maxNumber = moveNumber
-            stopOnWhite = self.noBlackMove2
+            stopOnWhite = 1-self.noBlackMove2
 
             if firstTime:
                 self.loadMoveList()
@@ -639,7 +641,7 @@ class PGN_GUI(Frame):
         else:
             self.listCanvas.yview(MOVETO,0.0)
 
-        if not (moveNumber == maxNumber and stopOnWhite == self.noBlackMove2):
+        if not (moveNumber == maxNumber and stopOnWhite == 1-self.noBlackMove2):
             createStartPosition()
             if stopOnWhite == 0:
                 playTo = moveNumber
@@ -698,14 +700,14 @@ class PGN_GUI(Frame):
                 clearAll()                  #MAYBE EXCEPT "0" SMTH OTHER!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 changes = playGame(self.gameLine, maxNumber)
 
-                stopOnWhite = self.noBlackMove2
+                stopOnWhite = 1-self.noBlackMove2
                 if type(changes) != type(1):
                     self.changeImages(changes)
                 else:
                     invalidMove(changes)
             self.prevButton.config(background=self.listCanvas["background"])
-            self.buttonsDic[(maxNumber,self.noBlackMove2)].config(background=self.colorSelected)
-            self.prevButton=self.buttonsDic[(maxNumber,self.noBlackMove2)]
+            self.buttonsDic[(maxNumber,1-self.noBlackMove2)].config(background=self.colorSelected)
+            self.prevButton=self.buttonsDic[(maxNumber,1-self.noBlackMove2)]
 
     def changeImages(self, board):
         self.currentPosition = board
@@ -1338,6 +1340,21 @@ class PGN_GUI(Frame):
     def loadGame(self, fileToLoad="none"):
         # window for choosing file to laod
         #fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
+        #INIT
+#        self.__init__()
+        print "AFTER INIT:",self.noBlackMove2
+        self.moveListFrame = Frame(self.sideBar)
+        self.moveListFrame.grid(row=0,column=0,sticky=NW)
+        self.vscrollbar = Scrollbar(self.moveListFrame)
+        self.vscrollbar.grid(row=0, column=1, sticky=N+S, pady=4)
+        self.listCanvas = Canvas(self.moveListFrame,yscrollcommand=self.vscrollbar.set,height=315 ,width=196)
+        self.listCanvas.grid(row=0, column=0, sticky=N+S+E+W, pady=4)
+        self.vscrollbar.config(command=self.listCanvas.yview)
+        self.frameList = Frame(self.listCanvas)
+        self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
+        self.frameList.update_idletasks()
+        self.listCanvas.config(scrollregion=self.listCanvas.bbox("all"))
+#        #/INIT
         if fileToLoad=="none":
             fileToLoad  = "1.pgn"
             try:
