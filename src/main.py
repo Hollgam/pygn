@@ -35,7 +35,7 @@ class PGN_GUI(Frame):
         self.currentPosition = createStartPosition()
         self.notesFile = 0
         self.notesImported = 0
-
+        self.firstTimeLoaded = 1
         self.font1 = "14"
         self.font2 = "Helvetica 9"
         self.infoRightFont = "Helvetica 9 bold"
@@ -335,8 +335,8 @@ class PGN_GUI(Frame):
             #WRITE
             fileIn = open(self.fileListName,"w")
             for line in self.filesList:
-#                line = line.replace('\n','')
-                fileIn.write(line)
+                line = line.replace('\n','')
+                fileIn.write(line+'\n')
             fileIn.close()
         else:
             print "FILE COULD NOT BE OPENED"
@@ -557,10 +557,13 @@ class PGN_GUI(Frame):
     def moveBack(self, event= None):
         global stopOnWhite, tempCounter
         from inc.chessengine import board, moveNumber
-        if maxNumber-moveNumber+1>=self.middleListPos-1+stopOnWhite:
-            self.listCanvas.yview(MOVETO,((moveNumber-self.middleListPos-1)*2+stopOnWhite)*self.buttonHC)
-        else:
-            self.listCanvas.yview(MOVETO,1.0)
+        self.buttonsDic[(1, 0)].update()
+        global maxNumber
+        if int(self.listCanvas['height'])/self.buttonsDic[(1,0)].winfo_height()<maxNumber:
+            if maxNumber-moveNumber+1>=self.middleListPos-1+stopOnWhite:
+                self.listCanvas.yview(MOVETO,((moveNumber-self.middleListPos-1)*2+stopOnWhite)*self.buttonHC)
+            else:
+                self.listCanvas.yview(MOVETO,1.0)
 
         if not (stopOnWhite == 1 and moveNumber == 0):
             createStartPosition()
@@ -590,11 +593,12 @@ class PGN_GUI(Frame):
     def moveBack5(self, event= None):
         global stopOnWhite
         from inc.chessengine import board, moveNumber
-
-        if maxNumber-moveNumber+5 >= self.middleListPos:
-            self.listCanvas.yview(MOVETO,((moveNumber-self.middleListPos-5)*2)*self.buttonHC)
-        else:
-            self.listCanvas.yview(MOVETO,1.0)
+        global maxNumber
+        if int(self.listCanvas['height'])/self.buttonsDic[(1,0)].winfo_height()<maxNumber:
+            if maxNumber-moveNumber+5 >= self.middleListPos:
+                self.listCanvas.yview(MOVETO,((moveNumber-self.middleListPos-5)*2)*self.buttonHC)
+            else:
+                self.listCanvas.yview(MOVETO,1.0)
 
         if  moveNumber >= 5 and not (stopOnWhite == 0 and moveNumber == 5):
             createStartPosition()
@@ -635,11 +639,11 @@ class PGN_GUI(Frame):
         global maxNumber
         global stopOnWhite
         from inc.chessengine import board, moveNumber
-
-        if moveNumber+stopOnWhite >= self.middleListPos:
-            self.listCanvas.yview(MOVETO,((moveNumber-self.middleListPos-1)*2+stopOnWhite)*self.buttonHC)
-        else:
-            self.listCanvas.yview(MOVETO,0.0)
+        if int(self.listCanvas['height'])/self.buttonsDic[(1,0)].winfo_height()<maxNumber:
+            if moveNumber+stopOnWhite >= self.middleListPos:
+                self.listCanvas.yview(MOVETO,((moveNumber-self.middleListPos-1)*2+stopOnWhite)*self.buttonHC)
+            else:
+                self.listCanvas.yview(MOVETO,0.0)
 
         if not (moveNumber == maxNumber and stopOnWhite == 1-self.noBlackMove2):
             createStartPosition()
@@ -665,15 +669,15 @@ class PGN_GUI(Frame):
             self.buttonsDic[(playTo,stopOnWhite)].config(background=self.colorSelected)
             self.prevButton=self.buttonsDic[(playTo,stopOnWhite)]
 
-    def moveForward5(self, event= None):
+    def moveForward5(self, event = None):
         global stopOnWhite
         global maxNumber
         from inc.chessengine import board, moveNumber
-
-        if moveNumber+5 >= self.middleListPos:
-            self.listCanvas.yview(MOVETO,((moveNumber-self.middleListPos+5)*2)*self.buttonHC)
-        else:
-            self.listCanvas.yview(MOVETO,0.0)
+        if int(self.listCanvas['height'])/self.buttonsDic[(1,0)].winfo_height()<maxNumber:
+            if moveNumber+5 >= self.middleListPos:
+                self.listCanvas.yview(MOVETO,((moveNumber-self.middleListPos+5)*2)*self.buttonHC)
+            else:
+                self.listCanvas.yview(MOVETO,0.0)
 
         if moveNumber <= maxNumber - 5:
             createStartPosition()
@@ -1014,9 +1018,9 @@ class PGN_GUI(Frame):
                 invalidMove(changes)
 
         self.notebook.setnaturalsize()
-
-        self.buttonsDic[(1, 0)].update()
-        self.middleListPos = int(round(int(self.listCanvas["height"])/(2.0*self.buttonsDic[(1, 0)].winfo_height())))
+        if not self.firstTimeLoaded:
+            self.buttonsDic[(1, 0)].update()
+            self.middleListPos = int(round(int(self.listCanvas["height"])/(2.0*self.buttonsDic[(1, 0)].winfo_height())))
 
     def changeColorScheme(self):
         if self.selectedColorScheme.get() == "Set 1":
@@ -1342,7 +1346,6 @@ class PGN_GUI(Frame):
         #fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
         #INIT
 #        self.__init__()
-        print "AFTER INIT:",self.noBlackMove2
         self.moveListFrame = Frame(self.sideBar)
         self.moveListFrame.grid(row=0,column=0,sticky=NW)
         self.vscrollbar = Scrollbar(self.moveListFrame)
@@ -1356,20 +1359,10 @@ class PGN_GUI(Frame):
         self.listCanvas.config(scrollregion=self.listCanvas.bbox("all"))
 #        #/INIT
         if fileToLoad=="none":
-            fileToLoad  = "1.pgn"
-            try:
-                print self.fileDicRev[fileToLoad]
-            except:
-                someInfo = 'yoyoyo'
-                self.gamesList.insert(END,someInfo)
-                self.fileDicRev[fileToLoad]=someInfo
-                self.fileDic[someInfo]=fileToLoad
-                fileIn = open(self.fileListName,"w")
-                for line in self.filesList:
-                    line = line.replace('\n','')
-                    fileIn.write(line)
-                fileIn.write('\n'+fileToLoad+'#'+someInfo)
-                fileIn.close()
+#            fileToLoad  = "1.pgn"
+            fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
+            print fileToLoad
+
         notesToLoad = fileToLoad + "n"
         self.notesFile = notesToLoad
         self.loadNotes()
@@ -1379,6 +1372,48 @@ class PGN_GUI(Frame):
         self.makeButtonsActive()
         self.showLastPosition(1)
         self.showInfoAboutGame()
+        someInfo=''
+        try:
+            someInfo+=self.gameInfo["White"]+ ' vs '+self.gameInfo["Black"]+', '
+        except:
+            try:
+                someInfo+=self.gameInfo["white"]+ ' vs '+self.gameInfo["black"]+', '
+            except:
+                someInfo+='[No info about players ], '
+        try:
+            someInfo += '"'+self.gameInfo["Result"]+'", '
+        except:
+            try:
+                someInfo+=self.gameInfo['result']+', '
+            except:
+                someInfo+='[No info about result], '
+        try:
+            someInfo += self.gameInfo["Event"]+', '
+        except:
+            pass
+        try:
+            someInfo += self.gameInfo["Date"]+', '
+        except:
+            pass
+        try:
+            someInfo += self.gameInfo["Site"]
+        except:
+            pass
+
+        try:
+            print self.fileDicRev[fileToLoad]
+        except:
+            someInfo=someInfo+'\n'
+            self.gamesList.insert(END,someInfo)
+            self.fileDicRev[fileToLoad]=someInfo
+            self.fileDic[someInfo]=fileToLoad
+            fileIn = open(self.fileListName,"w")
+            for line in self.filesList:
+                line = line.replace('\n','')
+                fileIn.write(line+'\n')
+            self.filesList+=[fileToLoad+'#'+someInfo]
+            fileIn.write(fileToLoad+'#'+someInfo+'\n')
+            fileIn.close()
 
     def closeGame(self, event= None):
         self.saveNotes()
