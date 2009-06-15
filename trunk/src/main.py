@@ -633,8 +633,6 @@ class PGN_GUI(Frame):
                     invalidMove(changes)
             self.prevButton.config(background=self.listCanvas["background"])
 
-
-
     def moveForward(self, event= None):
         global maxNumber
         global stopOnWhite
@@ -1343,77 +1341,74 @@ class PGN_GUI(Frame):
 
     def loadGame(self, fileToLoad="none"):
         # window for choosing file to laod
-        #fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
-        #INIT
-#        self.__init__()
-        self.moveListFrame = Frame(self.sideBar)
-        self.moveListFrame.grid(row=0,column=0,sticky=NW)
-        self.vscrollbar = Scrollbar(self.moveListFrame)
-        self.vscrollbar.grid(row=0, column=1, sticky=N+S, pady=4)
-        self.listCanvas = Canvas(self.moveListFrame,yscrollcommand=self.vscrollbar.set,height=315 ,width=196)
-        self.listCanvas.grid(row=0, column=0, sticky=N+S+E+W, pady=4)
-        self.vscrollbar.config(command=self.listCanvas.yview)
-        self.frameList = Frame(self.listCanvas)
-        self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
-        self.frameList.update_idletasks()
-        self.listCanvas.config(scrollregion=self.listCanvas.bbox("all"))
-#        #/INIT
+
         if fileToLoad=="none":
-#            fileToLoad  = "1.pgn"
             fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
             print fileToLoad
-
-        notesToLoad = fileToLoad + "n"
-        self.notesFile = notesToLoad
-        self.loadNotes()
-        self.gameLine = readFileLine(fileToLoad)
-        self.gameInfo = readInfoFromFile(fileToLoad)
-        self.loadNotes()
-        self.makeButtonsActive()
-        self.showLastPosition(1)
-        self.showInfoAboutGame()
-        someInfo=''
-        try:
-            someInfo+=self.gameInfo["White"]+ ' vs '+self.gameInfo["Black"]+', '
-        except:
+        if fileToLoad != '':
+            self.__init__()
+#            self.moveListFrame = Frame(self.sideBar)
+#            self.moveListFrame.grid(row=0,column=0,sticky=NW)
+#            self.vscrollbar = Scrollbar(self.moveListFrame)
+#            self.vscrollbar.grid(row=0, column=1, sticky=N+S, pady=4)
+#            self.listCanvas = Canvas(self.moveListFrame,yscrollcommand=self.vscrollbar.set,height=315 ,width=196)
+#            self.listCanvas.grid(row=0, column=0, sticky=N+S+E+W, pady=4)
+#            self.vscrollbar.config(command=self.listCanvas.yview)
+#            self.frameList = Frame(self.listCanvas)
+#            self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
+#            self.frameList.update_idletasks()
+#            self.listCanvas.config(scrollregion=self.listCanvas.bbox("all"))
+            notesToLoad = fileToLoad + "n"
+            self.notesFile = notesToLoad
+            self.loadNotes()
+            self.gameLine = readFileLine(fileToLoad)
+            self.gameInfo = readInfoFromFile(fileToLoad)
+            self.loadNotes()
+            self.makeButtonsActive()
+            self.showLastPosition(1)
+            self.showInfoAboutGame()
+            someInfo=''
             try:
-                someInfo+=self.gameInfo["white"]+ ' vs '+self.gameInfo["black"]+', '
+                someInfo+=self.gameInfo["White"]+ ' vs '+self.gameInfo["Black"]+', '
             except:
-                someInfo+='[No info about players ], '
-        try:
-            someInfo += '"'+self.gameInfo["Result"]+'", '
-        except:
+                try:
+                    someInfo+=self.gameInfo["white"]+ ' vs '+self.gameInfo["black"]+', '
+                except:
+                    someInfo+='[No info about players ], '
             try:
-                someInfo+=self.gameInfo['result']+', '
+                someInfo += '"'+self.gameInfo["Result"]+'", '
             except:
-                someInfo+='[No info about result], '
-        try:
-            someInfo += self.gameInfo["Event"]+', '
-        except:
-            pass
-        try:
-            someInfo += self.gameInfo["Date"]+', '
-        except:
-            pass
-        try:
-            someInfo += self.gameInfo["Site"]
-        except:
-            pass
+                try:
+                    someInfo+=self.gameInfo['result']+', '
+                except:
+                    someInfo+='[No info about result], '
+            try:
+                someInfo += self.gameInfo["Event"]+', '
+            except:
+                pass
+            try:
+                someInfo += self.gameInfo["Date"]+', '
+            except:
+                pass
+            try:
+                someInfo += self.gameInfo["Site"]
+            except:
+                pass
 
-        try:
-            print self.fileDicRev[fileToLoad]
-        except:
-            someInfo=someInfo+'\n'
-            self.gamesList.insert(END,someInfo)
-            self.fileDicRev[fileToLoad]=someInfo
-            self.fileDic[someInfo]=fileToLoad
-            fileIn = open(self.fileListName,"w")
-            for line in self.filesList:
-                line = line.replace('\n','')
-                fileIn.write(line+'\n')
-            self.filesList+=[fileToLoad+'#'+someInfo]
-            fileIn.write(fileToLoad+'#'+someInfo+'\n')
-            fileIn.close()
+            try:
+                print self.fileDicRev[fileToLoad]
+            except:
+                someInfo=someInfo+'\n'
+                self.gamesList.insert(END,someInfo)
+                self.fileDicRev[fileToLoad]=someInfo
+                self.fileDic[someInfo]=fileToLoad
+                fileIn = open(self.fileListName,"w")
+                for line in self.filesList:
+                    line = line.replace('\n','')
+                    fileIn.write(line+'\n')
+                self.filesList+=[fileToLoad+'#'+someInfo]
+                fileIn.write(fileToLoad+'#'+someInfo+'\n')
+                fileIn.close()
 
     def closeGame(self, event= None):
         self.saveNotes()
