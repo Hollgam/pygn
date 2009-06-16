@@ -20,7 +20,7 @@ tempCounter = 0
 
 class PGN_GUI(Frame):
 
-    def __init__(self):
+    def __init__(self,h="d"):
 
         Frame.__init__(self)
         Pmw.initialise()
@@ -465,7 +465,8 @@ class PGN_GUI(Frame):
                 self.loadMoveList()
 
             self.listCanvas.yview(MOVETO,1.0)
-            self.prevButton.config(background=self.listCanvas["background"])
+            if not firstTime:
+                self.prevButton.config(background=self.listCanvas["background"])
             self.buttonsDic[(maxNumber,not self.noBlackLastMove)].config(background=self.colorSelected)
             self.prevButton=self.buttonsDic[(maxNumber,not self.noBlackLastMove)]
 
@@ -1346,26 +1347,32 @@ class PGN_GUI(Frame):
             fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
             print fileToLoad
         if fileToLoad != '':
-            self.__init__()
-#            self.moveListFrame = Frame(self.sideBar)
-#            self.moveListFrame.grid(row=0,column=0,sticky=NW)
-#            self.vscrollbar = Scrollbar(self.moveListFrame)
-#            self.vscrollbar.grid(row=0, column=1, sticky=N+S, pady=4)
-#            self.listCanvas = Canvas(self.moveListFrame,yscrollcommand=self.vscrollbar.set,height=315 ,width=196)
-#            self.listCanvas.grid(row=0, column=0, sticky=N+S+E+W, pady=4)
-#            self.vscrollbar.config(command=self.listCanvas.yview)
-#            self.frameList = Frame(self.listCanvas)
-#            self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
-#            self.frameList.update_idletasks()
-#            self.listCanvas.config(scrollregion=self.listCanvas.bbox("all"))
+            
+            currentCH = int(self.listCanvas["height"])
+            currentCW = int(self.listCanvas["width"])
+
+            self.moveListFrame.destroy()
+            self.moveListFrame = Frame(self.sideBar)
+            self.moveListFrame.grid(row=0,column=0,sticky=NW)
+            self.vscrollbar = Scrollbar(self.moveListFrame)
+            self.vscrollbar.grid(row=0, column=1, sticky=N+S, pady=4)
+            self.listCanvas = Canvas(self.moveListFrame,yscrollcommand=self.vscrollbar.set,height=currentCH ,width=currentCW)
+            self.listCanvas.grid(row=0, column=0, sticky=N+S+E+W, pady=4)
+            self.vscrollbar.config(command=self.listCanvas.yview)
+            self.frameList = Frame(self.listCanvas)
+            self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
+            self.frameList.update_idletasks()
+            self.listCanvas.config(scrollregion=self.listCanvas.bbox("all"))
+
             notesToLoad = fileToLoad + "n"
             self.notesFile = notesToLoad
             self.loadNotes()
             self.gameLine = readFileLine(fileToLoad)
             self.gameInfo = readInfoFromFile(fileToLoad)
+            self.showLastPosition(1)
             self.loadNotes()
             self.makeButtonsActive()
-            self.showLastPosition(1)
+            
             self.showInfoAboutGame()
             someInfo=''
             try:
