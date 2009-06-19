@@ -1680,6 +1680,7 @@ def playGame(gameList, playToNumber=-1, whiteLast=0):
                     moveWhite = changePosition(gameList[i+1:spaceNumber])
                     if moveWhite != 1:
                         print 'ERROR AT MOVE:', moveNumber
+                        #print gameList[:i-2]
                         errorAtMove = [moveNumber,"w"]
                         print errorAtMove
                         return moveWhite

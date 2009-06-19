@@ -1585,10 +1585,11 @@ class PGN_GUI(Frame):
         from inc.chessengine import errorAtMove
 
         clearAll()
+        createStartPosition()
         if errorAtMove[1] == "w":
-            changes = playGame(self.gameLine, errorAtMove[0]-2, 1)
+            changes = playGame(self.gameLine, errorAtMove[0]-1, 1)
         elif errorAtMove[1] == "b":
-            changes = playGame(self.gameLine, errorAtMove[0]-2, 0)
+            changes = playGame(self.gameLine, errorAtMove[0]-1, 0)
         print changes
         self.changeImages(changes)
 
