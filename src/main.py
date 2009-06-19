@@ -1587,11 +1587,27 @@ class PGN_GUI(Frame):
         clearAll()
         createStartPosition()
         if errorAtMove[1] == "w":
-            changes = playGame(self.gameLine, errorAtMove[0]-1, 1)
+            if errorAtMove[0]==1:
+                print "FIRSTTTTTTTTTTTTTTT"
+                changes = playGame(self.gameLine , 0, 0)
+            else:
+                changes = playGame(self.gameLine, errorAtMove[0]-1, 0)
         elif errorAtMove[1] == "b":
-            changes = playGame(self.gameLine, errorAtMove[0]-1, 0)
+            changes = playGame(self.gameLine, errorAtMove[0], 1)
         print changes
         self.changeImages(changes)
+
+
+        ###################
+        global maxNumber, stopOnWhite
+        maxNumber = errorAtMove[0]
+        self.loadMoveList()
+        self.listCanvas.yview(MOVETO,1.0)
+        self.prevButton.config(background=self.listCanvas["background"])
+        self.buttonsDic[(maxNumber,not self.noBlackLastMove)].config(background=self.colorSelected)
+        self.prevButton=self.buttonsDic[(maxNumber,not self.noBlackLastMove)]
+        ##################
+
 
         print message
         #showinfo("Error", message)
