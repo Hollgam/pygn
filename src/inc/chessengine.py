@@ -21,6 +21,7 @@ noBlackMove = 1
 
 lastPosition1 = [9,9]
 lastPosition2 = [9,9]
+errorAtMove = []
 
 board = []
 startBoard = []
@@ -1609,6 +1610,8 @@ def playGame(gameList, playToNumber=-1, whiteLast=0):
     global moveNumber, board,noBlackMove
     numberCounter = 1
     moveNumber = 0
+    global errorAtMove
+    errorAtMove = []
     currentNumberInLine = ''
     spaceNumber = 0
     endMoveNumber = 0
@@ -1676,12 +1679,17 @@ def playGame(gameList, playToNumber=-1, whiteLast=0):
 
                     moveWhite = changePosition(gameList[i+1:spaceNumber])
                     if moveWhite != 1:
+                        print 'ERROR AT MOVE:', moveNumber
+                        errorAtMove = [moveNumber,"w"]
+                        print errorAtMove
                         return moveWhite
                         break
 
                     if not noBlackMove:
                         moveBlack = changePosition(gameList[spaceNumber:endMoveNumber+1])
                         if moveBlack != 1:
+                            errorAtMove = [moveNumber,"b"]
+                            print errorAtMove
                             return moveBlack
                             break
 
@@ -1689,6 +1697,7 @@ def playGame(gameList, playToNumber=-1, whiteLast=0):
                         return board
                     spaceNumber = 0
                     endMoveNumber = 0
+
             except:
                 pass
         if moveWhite !=1 or moveBlack != 1:

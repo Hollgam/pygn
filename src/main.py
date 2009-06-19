@@ -47,6 +47,7 @@ class PGN_GUI(Frame):
         self.takenPiecesWhiteImages = []
         self.takenPiecesBlackImages = []
         self.infoLabelsData = []
+        self.doFurther = 1
 
         self.noBlackLastMove = 0
         self.noBlackMove2 = 0
@@ -456,7 +457,7 @@ class PGN_GUI(Frame):
             if type(lastPosition) != type(1):
                 self.changeImages(lastPosition)
             else:
-                invalidMove(lastPosition)
+                self.invalidMove(lastPosition)
             from inc.chessengine import moveNumber
             maxNumber = moveNumber
             stopOnWhite = 1-self.noBlackMove2
@@ -538,7 +539,7 @@ class PGN_GUI(Frame):
             if type(changes) != type(1):
                 self.changeImages(changes)
             else:
-                invalidMove(changes)
+                self.invalidMove(changes)
             stopOnWhite = not stopOnWhite
 
 
@@ -585,7 +586,7 @@ class PGN_GUI(Frame):
                 if type(changes) != type(1):
                     self.changeImages(changes)
                 else:
-                    invalidMove(changes)
+                    self.invalidMove(changes)
             self.prevButton.config(background=self.listCanvas["background"])
             if not (playTo == 0 and stopOnWhite==1):
                 self.buttonsDic[(playTo,stopOnWhite)].config(background=self.colorSelected)
@@ -616,7 +617,7 @@ class PGN_GUI(Frame):
                 if type(changes) != type(1):
                     self.changeImages(changes)
                 else:
-                    invalidMove(changes)
+                    self.invalidMove(changes)
 
             self.prevButton.config(background=self.listCanvas["background"])
             if not (playTo == 0 and stopOnWhite==1):
@@ -631,7 +632,7 @@ class PGN_GUI(Frame):
                 if type(changes) != type(1):
                     self.changeImages(changes)
                 else:
-                    invalidMove(changes)
+                    self.invalidMove(changes)
             self.prevButton.config(background=self.listCanvas["background"])
 
     def moveForward(self, event= None):
@@ -663,7 +664,7 @@ class PGN_GUI(Frame):
                 if type(changes) != type(1):
                     self.changeImages(changes)
                 else:
-                    invalidMove(changes)
+                    self.invalidMove(changes)
             self.prevButton.config(background=self.listCanvas["background"])
             self.buttonsDic[(playTo,stopOnWhite)].config(background=self.colorSelected)
             self.prevButton=self.buttonsDic[(playTo,stopOnWhite)]
@@ -693,7 +694,7 @@ class PGN_GUI(Frame):
                 if type(changes) != type(1):
                     self.changeImages(changes)
                 else:
-                    invalidMove(changes)
+                    self.invalidMove(changes)
             self.prevButton.config(background=self.listCanvas["background"])
             self.buttonsDic[(playTo,stopOnWhite)].config(background=self.colorSelected)
             self.prevButton=self.buttonsDic[(playTo,stopOnWhite)]
@@ -707,7 +708,7 @@ class PGN_GUI(Frame):
                 if type(changes) != type(1):
                     self.changeImages(changes)
                 else:
-                    invalidMove(changes)
+                    self.invalidMove(changes)
             self.prevButton.config(background=self.listCanvas["background"])
             self.buttonsDic[(maxNumber,1-self.noBlackMove2)].config(background=self.colorSelected)
             self.prevButton=self.buttonsDic[(maxNumber,1-self.noBlackMove2)]
@@ -1014,7 +1015,7 @@ class PGN_GUI(Frame):
             if type(changes) != type(1):
                 self.changeImages(changes)
             else:
-                invalidMove(changes)
+                self.invalidMove(changes)
 
         self.notebook.setnaturalsize()
         if not self.firstTimeLoaded:
@@ -1145,7 +1146,7 @@ class PGN_GUI(Frame):
             if type(changes) != type(1):
                 self.changeImages(changes)
             else:
-                invalidMove(changes)
+                self.invalidMove(changes)
 
     def showTakenPieces(self):
         from inc.chessengine import takenWhite, takenBlack
@@ -1344,7 +1345,8 @@ class PGN_GUI(Frame):
         # window for choosing file to laod
 
         if fileToLoad=="none":
-            fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
+            #fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
+            fileToLoad = "1.pgn"
             print fileToLoad
         if fileToLoad != '':
             
@@ -1531,59 +1533,72 @@ class PGN_GUI(Frame):
         pass
 
 
-def invalidMove(type=0):
-    """
-    shows different errors in chess logic of moves
-    """
-    if not type:
-        message = "ERROR"
-    elif type==13:
-        message = "OTHER PIECES ON THE WAY"
-    elif type==2:
-        message = "YOUR PIECE ON THE DESTINATION POINT"
-    elif type==3:
-        message = "x WAS NOT MENTIONED"
-    elif type==4:
-        message = "TRYING TO TAKE YOUR OWN PIECE"
-    elif type==5:
-        message = "TRYING TO TAKE AN EMPTY CELL"
-    elif type==6:
-        message = "MORE THAN ONE PIECE CAN MAKE A MOVE"
-    elif type==7:
-        message = "NO PIECE CAN MAKE A MOVE"
-    elif type==8:
-        message = "NO PIECE WITH THIS ADDITIONAL COORDINATES CAN MOVE"
-    elif type==9:
-        message = "CAN NOT MAKE A CASTLE"
-    elif type==10:
-        message = "CASTLE HAS ALREADY BEEN DONE"
-    elif type==11:
-        message = "CHECK FOR YOU CANT BE A RESULT OF YOUR MOVE"
-    elif type==12:
-        message = "BAD CHARS IN THE MOVE"
-    elif type==14:
-        message = 'WRONG NUMBER OF MOVE ENTERED'
-    elif type==15:
-        message = 'INCORRECT ORDER OF MOVE NUMBERS'
-    elif type==16:
-        message = 'INCORRECT QUANTITYOF MOVES'
-    elif type==17:
-        message = 'NO CHECK'
-    elif type==18:
-        message = 'CANNOT MOVE THERE BECAUSE OF THE CHECK'
-    elif type==19:
-        message = 'NO CHECKMATE: ENENY KING IS NOT UNDER ATTACK'
-    elif type==20:
-        message = 'NO CHECKMATE: ENENY CAN PROTECT HIS/HER KING'
-    elif type==21:
-        message = 'NO CHECKMATE: ENEMY KING CAN ESCAPE'
-    elif type==22:
-        message = 'KING IS UNDER ATTACK AFTER THIS MOVE'
+    def invalidMove(self,type=0):
+        """
+        shows different errors in chess logic of moves
+        """
+        if not type:
+            message = "ERROR"
+        elif type==13:
+            message = "OTHER PIECES ON THE WAY"
+        elif type==2:
+            message = "YOUR PIECE ON THE DESTINATION POINT"
+        elif type==3:
+            message = "x WAS NOT MENTIONED"
+        elif type==4:
+            message = "TRYING TO TAKE YOUR OWN PIECE"
+        elif type==5:
+            message = "TRYING TO TAKE AN EMPTY CELL"
+        elif type==6:
+            message = "MORE THAN ONE PIECE CAN MAKE A MOVE"
+        elif type==7:
+            message = "NO PIECE CAN MAKE A MOVE"
+        elif type==8:
+            message = "NO PIECE WITH THIS ADDITIONAL COORDINATES CAN MOVE"
+        elif type==9:
+            message = "CAN NOT MAKE A CASTLE"
+        elif type==10:
+            message = "CASTLE HAS ALREADY BEEN DONE"
+        elif type==11:
+            message = "CHECK FOR YOU CANT BE A RESULT OF YOUR MOVE"
+        elif type==12:
+            message = "BAD CHARS IN THE MOVE"
+        elif type==14:
+            message = 'WRONG NUMBER OF MOVE ENTERED'
+        elif type==15:
+            message = 'INCORRECT ORDER OF MOVE NUMBERS'
+        elif type==16:
+            message = 'INCORRECT QUANTITYOF MOVES'
+        elif type==17:
+            message = 'NO CHECK'
+        elif type==18:
+            message = 'CANNOT MOVE THERE BECAUSE OF THE CHECK'
+        elif type==19:
+            message = 'NO CHECKMATE: ENENY KING IS NOT UNDER ATTACK'
+        elif type==20:
+            message = 'NO CHECKMATE: ENENY CAN PROTECT HIS/HER KING'
+        elif type==21:
+            message = 'NO CHECKMATE: ENEMY KING CAN ESCAPE'
+        elif type==22:
+            message = 'KING IS UNDER ATTACK AFTER THIS MOVE'
 
-    print message
-    showinfo("Error", message)
-    #sys.exit(1) #EXITS A PROGRAM HANDY FOR CHECKS
-    return 1
+        from inc.chessengine import errorAtMove
+
+        clearAll()
+        if errorAtMove[1] == "w":
+            changes = playGame(self.gameLine, errorAtMove[0]-2, 1)
+        elif errorAtMove[1] == "b":
+            changes = playGame(self.gameLine, errorAtMove[0]-2, 0)
+        print changes
+        self.changeImages(changes)
+
+        print message
+        #showinfo("Error", message)
+
+        self.doFurther = 0
+
+        #sys.exit(1) #EXITS A PROGRAM HANDY FOR CHECKS
+        return 1
 
 def main():
     createStartPosition()
