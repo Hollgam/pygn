@@ -348,7 +348,7 @@ class PGN_GUI(Frame):
             print 'LINE',line,self.fileDic[line]
             self.loadGame(self.fileDic[line])
             break
-    
+
     def createBoard(self):
         self.buttons = []
         color =0
@@ -446,28 +446,37 @@ class PGN_GUI(Frame):
         global maxNumber, stopOnWhite
         from inc.chessengine import board, moveNumber
         createStartPosition()
-        
+
         if self.gameLine != 'ERROR':
             clearAll()
             lastPosition = playGame(self.gameLine)
+            from inc.chessengine import errorAtMove
             if firstTime:
                 from inc.chessengine import noBlackMove
                 self.noBlackMove2=noBlackMove
                 print "noBlackMove:",noBlackMove
+
             if type(lastPosition) != type(1):
                 self.changeImages(lastPosition)
+                from inc.chessengine import moveNumber
             else:
                 self.invalidMove(lastPosition)
+
             from inc.chessengine import moveNumber
             maxNumber = moveNumber
             stopOnWhite = 1-self.noBlackMove2
 
-            if firstTime:
+            if firstTime and type(lastPosition) != type(1):
                 self.loadMoveList()
 
-            self.listCanvas.yview(MOVETO,1.0)
+            if type(lastPosition) == type(1):
+                self.listCanvas.yview(MOVETO,((maxNumber-self.middleListPos-1)*2+stopOnWhite)*self.buttonHC)
+            else:
+                self.listCanvas.yview(MOVETO,1.0)
+
             if not firstTime:
                 self.prevButton.config(background=self.listCanvas["background"])
+
             self.buttonsDic[(maxNumber,not self.noBlackLastMove)].config(background=self.colorSelected)
             self.prevButton=self.buttonsDic[(maxNumber,not self.noBlackLastMove)]
 
@@ -1349,7 +1358,7 @@ class PGN_GUI(Frame):
             fileToLoad = "1.pgn"
             print fileToLoad
         if fileToLoad != '':
-            
+
             currentCH = int(self.listCanvas["height"])
             currentCW = int(self.listCanvas["width"])
 
@@ -1374,7 +1383,7 @@ class PGN_GUI(Frame):
             self.showLastPosition(1)
             self.loadNotes()
             self.makeButtonsActive()
-            
+
             self.showInfoAboutGame()
             someInfo=''
             try:
@@ -1588,7 +1597,6 @@ class PGN_GUI(Frame):
         createStartPosition()
         if errorAtMove[1] == "w":
             if errorAtMove[0]==1:
-                print "FIRSTTTTTTTTTTTTTTT"
                 changes = playGame(self.gameLine , 0, 0)
             else:
                 changes = playGame(self.gameLine, errorAtMove[0]-1, 0)
@@ -1597,18 +1605,85 @@ class PGN_GUI(Frame):
         print changes
         self.changeImages(changes)
 
-
-        ###################
         global maxNumber, stopOnWhite
-        maxNumber = errorAtMove[0]
-        self.loadMoveList()
-        self.listCanvas.yview(MOVETO,1.0)
-        self.prevButton.config(background=self.listCanvas["background"])
-        self.buttonsDic[(maxNumber,not self.noBlackLastMove)].config(background=self.colorSelected)
-        self.prevButton=self.buttonsDic[(maxNumber,not self.noBlackLastMove)]
-        ##################
 
+        #FIND MAXNUMBER
+        posP=-1
+        posS=-1
+        for i in range(len(self.gameLine)-1,0,-1):
+            if self.gameLine[i]=='.':
+                posP = i
+            elif (self.gameLine[i]==' ' or not (self.gameLine[i] in ['1','2','3','4','5','6','7','8','9','0'])):
+                if posP!=-1:
+                    posS=i+1
+                    break
 
+        maxNumberInv = int(self.gameLine[posS:posP])
+        if maxNumberInv<maxNumber:
+            maxNumberInv = maxNumber
+
+        #INIT
+        self.noBlackLastMove = 0
+        self.buttonHC = 1/(2.0*maxNumberInv)
+        self.vscrollbar.config(command=self.listCanvas.yview)
+        self.frameList = Frame(self.listCanvas)
+        self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
+        self.frameList.update_idletasks()
+        self.listCanvas.config(scrollregion=self.listCanvas.bbox("all"))
+
+        rows = maxNumberInv
+
+        #LOAD GAME LIST
+        self.buttonsDic = {}
+        for i in range(1,rows+1):
+            for j in range(1,4):
+                if j==1:
+                    self.label = Label(self.frameList,text=str(i))
+                    self.label.grid(row=i,column=j)
+                else:
+                    if j==2:
+                        posPoint = self.gameLine.find(" "+str(i)+".")+2+len(str(i))
+                        posSpace = self.gameLine.find(" ",posPoint)
+                        if posSpace == -1:
+                            posSpace = len(self.gameLine)
+                            self.noBlackLastMove = 1
+
+                        if i<errorAtMove[0] or (i==errorAtMove[0] and errorAtMove[1]=='b'):
+                            self.button = Button(self.frameList, padx=22, text=self.gameLine[posPoint:posSpace], name=str(i)+"0",relief=GROOVE)
+                            self.button.bind("<Button-1>",self.changePositionList)
+
+                        elif i==errorAtMove[0] and errorAtMove[1]=='w':
+                            self.button = Button(self.frameList, padx=22, text=self.gameLine[posPoint:posSpace], name=str(i)+"0",relief=GROOVE,background='red')
+                        else:
+                            self.button = Button(self.frameList, padx=22, text=self.gameLine[posPoint:posSpace], name=str(i)+"0",relief=GROOVE,state=DISABLED)
+
+                        self.button.grid(row=i, column=j, sticky='news')
+                        self.buttonsDic[(i, j-2)] = self.button
+
+                    elif j==3:
+                        posEnd = self.gameLine.find(" "+str(i+1)+".", posSpace)
+                        if i==maxNumberInv:
+                            posEnd = len(self.gameLine)
+                        if not self.noBlackLastMove:
+#                            self.button = Button(self.frameList, padx=22, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE)
+
+                            if i<errorAtMove[0]:
+                                self.button = Button(self.frameList, padx=22, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE)
+                                self.button.bind("<Button-1>",self.changePositionList)
+                            elif i==errorAtMove[0] and errorAtMove[1]=='b':
+                                self.button = Button(self.frameList, padx=22, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE,background='red')
+                            else:
+                                self.button = Button(self.frameList, padx=22, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE,state=DISABLED)
+
+                            self.button.grid(row=i, column=j, sticky='news')
+                            self.buttonsDic[(i, j-2)] = self.button
+
+        self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
+        self.frameList.update_idletasks()
+        self.listCanvas.config(scrollregion=self.listCanvas.bbox("all"))
+
+        self.buttonsDic[(1, 0)].update()
+        self.middleListPos = int(round(int(self.listCanvas["height"])/(2.0*self.buttonsDic[(1, 0)].winfo_height())))
         print message
         #showinfo("Error", message)
 
