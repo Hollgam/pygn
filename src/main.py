@@ -1434,6 +1434,7 @@ class PGN_GUI(Frame):
         aboutWindow.geometry(sizeStr)
         aboutWindow.iconbitmap('img/favicon.ico')
         aboutWindow.config(bg=self.takenPiecesBackground)
+        aboutWindow.focus()
 
         logoLabel = Label(aboutWindow, image = self.imageLogo, bd=0)
         logoLabel.pack(side = TOP)
