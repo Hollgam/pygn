@@ -1788,7 +1788,17 @@ def readFileLine(fileName):
                 if '-' in line and (line[line.find('-')-1]!='O' or line[line.find('-')+1]!='O') and not ('{' in line or '}' in line):
                     print 'RESULT:',line
                     print 'Comments:',comments
+
+                    resultTemp = ''
+                    if line.find('1/2-1/2')!=-1:
+                        resultTemp = '1/2-1/2'
+                    elif line.find('1-0')!=-1:
+                        resultTemp = '1-0'
+                    else:
+                        resultTemp = '0-1'
                     fileIn.close()
+                    gameLine += line[:line.find(resultTemp)-1]
+                    
                     print gameLine
                     return gameLine
                 else:
