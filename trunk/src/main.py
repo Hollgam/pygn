@@ -29,6 +29,7 @@ class PGN_GUI(Frame):
         self.darkColor = "#B58863"
         self.lastMoveColor1 = "#FBF4A1"
         self.lastMoveColor2 = "#E9DC42"
+        self.colorSelected = "#eff6b2"
         self.takenPiecesBackground = "white"
         self.sideBarWidth = 220
         self.boardFliped  = 0
@@ -41,7 +42,8 @@ class PGN_GUI(Frame):
         self.infoRightFont = "Helvetica 9 bold"
         self.infoLeftFont = "Helvetica 9"
 
-        self.colorSelected = "#eff6b2"
+        self.loadConfig()
+        
         self.prevButton = Button()
 
         self.takenPiecesWhiteImages = []
@@ -309,6 +311,48 @@ class PGN_GUI(Frame):
 
         self.notebook.setnaturalsize()
 
+    def loadConfig(self):
+        cfgName = 'pygn.cfg'
+        if os.path.isfile(cfgName):
+            cfgFile = open(cfgName,'r')
+            for line in cfgFile:
+                if line[:2]=='lc':
+                    self.lightColor = line[3:line.find('*')]
+                elif line[:2]=='dc':
+                    self.darkColor = line[3:line.find('*')]
+                elif line[:2]=='m1':
+                    self.lastMoveColor1 = line[3:line.find('*')]
+                elif line[:2]=='m2':
+                    self.lastMoveColor2 = line[3:line.find('*')]
+                elif line[:2]=='f1':
+                    self.font1 = line[3:line.find('*')]
+                elif line[:2]=='f2':
+                    self.font2 = line[3:line.find('*')]
+                elif line[:2]=='rf':
+                    self.infoRightFont = line[3:line.find('*')]
+                elif line[:2]=='lf':
+                    self.infoLeftFont = line[3:line.find('*')]
+                elif line[:2]=='bf':
+                    try:
+                        self.boardFliped = int(line[3:line.find('*')])
+                    except:
+                        pass
+            self.changeConfig('bf','1')
+
+    def changeConfig(self,par,value):
+        cfgName = 'pygn.cfg'
+        itemsList = []
+        if os.path.isfile(cfgName):
+            cfgFile = open(cfgName,'r')
+            for line in cfgFile:
+                if line[:2]==par:
+                    line=line[:3]+value+line[line.find('*'):]
+                itemsList += [line]
+            cfgFile.close()
+            cfgFile = open(cfgName,'w')
+            for cline in itemsList:
+                cfgFile.write(cline)
+
     def loadGamesList(self):
         self.fileDic = {}
         self.fileDicRev = {}
@@ -319,7 +363,6 @@ class PGN_GUI(Frame):
             fileIn = open(self.fileListName,"r")
             for line in fileIn:
                 self.filesList += [line]
-            print self.filesList
             #clear list
             allClear = 0
             while not allClear:
@@ -329,17 +372,14 @@ class PGN_GUI(Frame):
                         print "remove",file
                         self.filesList.remove(file)
                         allClear = 0
-            print self.filesList
             #add items to file list
             for item in self.filesList:
                 item = item.replace('\n','')
                 self.gamesList.insert(END,item[item.find("#")+1:])
                 self.fileDic[item[item.find("#")+1:]]=item[:item.find("#")]
                 self.fileDicRev[item[:item.find("#")]]=item[item.find("#")+1:]
-            print self.fileDic
             fileIn.close()
             #WRITE
-            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!FILELIST:',self.filesList
             fileIn = open(self.fileListName,"w")
             for line in self.filesList:
                 line = line.replace('\n','')
