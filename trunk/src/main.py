@@ -1478,6 +1478,10 @@ class PGN_GUI(Frame):
             self.notesFile = notesToLoad
             self.loadNotes()
             self.gameLine = readFileLine(fileToLoad)
+            from inc.chessengine import gameLineCorrected
+            if gameLineCorrected:
+                showinfo("Warning", "Line with moves in the file was corrected. A wrong sequence of moves might have been created.")
+                gameLineCorrected = 0
             self.gameInfo = readInfoFromFile(fileToLoad)
             self.showLastPosition(1)
             self.loadNotes()
