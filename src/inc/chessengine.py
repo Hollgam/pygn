@@ -1856,8 +1856,7 @@ def clearLine(line):
                 break
     #clear not allowed symbols
     lineCleared = False
-    allowedSymbols = ['a','b','c','d','e','f','g','h','1','2','3','4','5','6','7','8','9','0','=','P','N','B','R','Q','K','+','#',' ','.','x','-','O','/']
-
+    allowedSymbols = ['a','b','c','d','e','f','g','h','1','2','3','4','5','6','7','8','9','0','=','P','N','B','R','Q','K','+','#',' ','.','x','-','O']
 
     while not lineCleared:
         lenx = len(gameLine)
