@@ -1868,9 +1868,9 @@ def clearLine(line):
                 break
 
     #clear moves after checkmate
-#    if gameLine.find('#')!=len(gameLine)-1:
-#        gameLine = gameLine[:gameLine.find('#')+1]
-#        gameLineCorrected = 1
+    if gameLine.find('#')>0 and gameLine.find('#')!=len(gameLine)-1:
+        gameLine = gameLine[:gameLine.find('#')+1]
+        gameLineCorrected = 1
 
     return gameLine
 
