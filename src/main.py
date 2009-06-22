@@ -355,7 +355,23 @@ class PGN_GUI(Frame):
             break
 
     def deleteMLItem(self):
-        pass
+        try:
+            current = self.gamesList.getcurselection()[0]
+            fileIn = open(self.fileListName,"w")
+            #filter
+            for line in self.filesList:
+                if line.find(current[:-2])>0:
+                    self.filesList.remove(line)
+            #write
+            for line in self.filesList:
+                line = line.replace('\n','')
+                fileIn.write(line+'\n')
+            fileIn.close()
+
+            self.gamesList.clear()
+            self.loadGamesList()
+        except:
+            pass
 
     def clearMoveList(self):
         fileIn = open(self.fileListName,"w")
