@@ -287,6 +287,11 @@ class PGN_GUI(Frame):
         self.gamesPage = self.notebook.add('Games   ')
         self.gamesList = Pmw.ScrolledListBox(self.gamesPage,dblclickcommand=self.gameListClick)
         self.gamesList.pack(side = TOP, expand = YES, fill = BOTH)
+
+        self.loadItem = Button(self.gamesPage,text='Load game',command=self.gameListClick).pack(side=LEFT, fill=BOTH, expand=1)
+        self.deleteItem = Button(self.gamesPage,text='Delete game',command=self.deleteMLItem).pack(side=LEFT, fill=BOTH, expand=1)
+        self.clearItem = Button(self.gamesPage,text='Clear all',command = self.clearMoveList).pack(side=LEFT, fill=BOTH, expand=1)
+
         self.loadGamesList()
 #        self.fileDic = {} #dictionary for files, format: info about file:path
         self.fileToLoad = ''
@@ -334,6 +339,7 @@ class PGN_GUI(Frame):
             print self.fileDic
             fileIn.close()
             #WRITE
+            print '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!FILELIST:',self.filesList
             fileIn = open(self.fileListName,"w")
             for line in self.filesList:
                 line = line.replace('\n','')
@@ -345,9 +351,19 @@ class PGN_GUI(Frame):
 
     def gameListClick(self):
         for line in self.gamesList.getcurselection():
-            print 'LINE',line,self.fileDic[line]
             self.loadGame(self.fileDic[line])
             break
+
+    def deleteMLItem(self):
+        pass
+
+    def clearMoveList(self):
+        fileIn = open(self.fileListName,"w")
+        fileIn.write('')
+        fileIn.close()
+        self.gamesList.clear()
+        self.loadGamesList()
+
 
     def createBoard(self):
         self.buttons = []
