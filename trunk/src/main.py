@@ -41,7 +41,8 @@ class PGN_GUI(Frame):
         self.font2 = "Helvetica 9"
         self.infoRightFont = "Helvetica 9 bold"
         self.infoLeftFont = "Helvetica 9"
-
+        self.boardSize = 'Default'
+        self.numberOfSet = '2'
         self.loadConfig()
         
         self.prevButton = Button()
@@ -137,7 +138,7 @@ class PGN_GUI(Frame):
         #color scheme
         self.choices.addcascademenu("Options", "Pieces Style")
         self.selectedColorScheme = StringVar()
-        self.selectedColorScheme.set("Set 1")
+        self.selectedColorScheme.set("Set "+self.numberOfSet)
         self.choices.addmenuitem("Pieces Style", "radiobutton", label="Set 1", variable=self.selectedColorScheme, command=self.changeColorScheme)
         self.choices.addmenuitem("Pieces Style", "radiobutton", label="Set 2", variable=self.selectedColorScheme, command=self.changeColorScheme)
 
@@ -161,7 +162,7 @@ class PGN_GUI(Frame):
         #board size
         self.choices.addcascademenu("Options", "Board size")
         self.selectedBoardSize = StringVar()
-        self.selectedBoardSize.set("Default")
+        self.selectedBoardSize.set(self.boardSize)
         self.choices.addmenuitem("Board size", "radiobutton", label="Small", variable=self.selectedBoardSize, command=self.changeBoardSize)
         self.choices.addmenuitem("Board size", "radiobutton", label="Default", variable=self.selectedBoardSize, command=self.changeBoardSize)
         self.choices.addmenuitem("Board size", "radiobutton", label="Large", variable=self.selectedBoardSize, command=self.changeBoardSize)
@@ -311,6 +312,8 @@ class PGN_GUI(Frame):
 
         self.notebook.setnaturalsize()
 
+        self.changeBoardSize()
+
     def loadConfig(self):
         cfgName = 'pygn.cfg'
         if os.path.isfile(cfgName):
@@ -337,6 +340,10 @@ class PGN_GUI(Frame):
                         self.boardFliped = int(line[3:line.find('*')])
                     except:
                         pass
+                elif line[:2]=='sz':
+                    self.boardSize = line[3:line.find('*')]
+                elif line[:2]=='ps':
+                    self.numberOfSet = line[3:line.find('*')]
             
 
     def changeConfig(self,par,value):
