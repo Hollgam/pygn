@@ -915,6 +915,7 @@ class PGN_GUI(Frame):
         pass
 
     def changeBoardColor(self):
+        self.changeConfig('bc',self.selectedBoardColor.get())
         if self.selectedBoardColor.get() == "Brown":
             self.lightColor = "#F0D9B5"
             self.darkColor = "#B58863"
