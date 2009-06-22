@@ -6,8 +6,8 @@ from PIL.ImageTk import PhotoImage
 from tkFileDialog import askopenfilename
 
 __author__="Hollgam and Vinchkovsky"
-__description__="A reader for PGN files."
-__version__="1.0"
+__description__="A reder for PGN files."
+__version__="0.3"
 
 ###VARS
 stopOnWhite = 1
@@ -44,7 +44,7 @@ class PGN_GUI(Frame):
         self.boardSize = 'Default'
         self.numberOfSet = '2'
         self.loadConfig()
-        
+
         self.prevButton = Button()
 
         self.takenPiecesWhiteImages = []
@@ -95,11 +95,6 @@ class PGN_GUI(Frame):
             self.imageLogo = PhotoImage(file = "img/logo/gcodelogo.png")
         except:
             print "Falied to load images from \\img\\logo folder"
-
-        try:
-            self.buttonsBg = PhotoImage(file = "img/board/Brown/w.png")
-        except:
-            print "Falied to load images from \\img\\board folder"
 
         self.master.bind("<Control-Key-O>", self.loadGame)
         self.master.bind("<Control-Key-o>", self.loadGame)
@@ -203,6 +198,7 @@ class PGN_GUI(Frame):
 
         self.frame1 = Frame(self.mainFrame)
         self.frame1.pack()
+
 
         self.buttonsFrame = Frame(self.mainFrame)
         self.createBoard()
@@ -349,7 +345,7 @@ class PGN_GUI(Frame):
                     self.boardSize = line[3:line.find('*')]
                 elif line[:2]=='ps':
                     self.numberOfSet = line[3:line.find('*')]
-            
+
 
     def changeConfig(self,par,value):
         cfgName = 'pygn.cfg'
@@ -406,6 +402,7 @@ class PGN_GUI(Frame):
             self.loadGame(self.fileDic[line])
             break
 
+
     def deleteMLItem(self):
         try:
             current = self.gamesList.getcurselection()[0]
@@ -443,10 +440,23 @@ class PGN_GUI(Frame):
         for i in range(8):
             self.buttons.append([])
             for j in range(8):
-                buttonName = str(i) + "/" + str(j)
-                self.buttons[-1] += [Label(self.buttonsFrame, name=buttonName, bd=1)]
+                if not color:
+                    bgcolor = self.lightColor
+                else:
+                    bgcolor = self.darkColor
+                buttonName = str(i) + "/" + str(j) + "/" + bgcolor
+                self.buttons[-1] += [Label(self.buttonsFrame, name=buttonName, bd=1, background = bgcolor)]
                 self.buttons[-1][-1].bind("<Button-1>", self.cellClicked)
                 self.buttons[-1][-1].grid(column=j, row=i)
+                if not color:
+                    color = 1
+                else:
+                    color = 0
+            if not color:
+                color = 1
+            else:
+                color = 0
+
         #Black pieces
         self.buttons[0][-1].config(image = self.imageBlackRock)
         self.buttons[0][0].config(image = self.imageBlackRock)
@@ -508,6 +518,8 @@ class PGN_GUI(Frame):
                 except:
                     pass
         self.buttonsFrame.pack()
+
+
 
 
     def cellClicked(self, event ):
