@@ -1838,13 +1838,26 @@ def clearLine(line):
     lineCleared = False
 
     while not lineCleared:
-        lenx = int(len(gameLine))
+        lenx = len(gameLine)
         lineCleared = True
         for i in range(0,lenx):
             if i!=0 and gameLine[i-1]==' ' and gameLine[i]==' ':
                 gameLine = gameLine[:i-1]+gameLine[i:lenx]
                 lineCleared = False
                 break
+    lineCleared = False
+    allowedSymbols = ['a','b','c','d','e','f','g','h','1','2','3','4','5','6','7','8','9','0','=','P','N','B','R','Q','K','+','#',' ','.','x','-','O']
+
+    while not lineCleared:
+        lenx = len(gameLine)
+        lineCleared = True
+        for i in range(0,lenx):
+            if gameLine[i] not in allowedSymbols:
+                print 'INVALID SYMBOL:', gameLine[i]
+                gameLine = gameLine[:i]+gameLine[i+1:]
+                lineCleared = False
+                break
+
     return gameLine
 
 
