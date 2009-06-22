@@ -43,6 +43,7 @@ class PGN_GUI(Frame):
         self.infoLeftFont = "Helvetica 9"
         self.boardSize = 'Default'
         self.numberOfSet = '2'
+        self.boardColor = 'Brown'
         self.loadConfig()
 
         self.prevButton = Button()
@@ -145,7 +146,7 @@ class PGN_GUI(Frame):
         #board color
         self.choices.addcascademenu("Options", "Board colors")
         self.selectedBoardColor = StringVar()
-        self.selectedBoardColor.set("Brown")
+        self.selectedBoardColor.set(self.boardColor)
         self.choices.addmenuitem("Board colors", "radiobutton", label="Brown", variable=self.selectedBoardColor, command=self.changeBoardColor)
         self.choices.addmenuitem("Board colors", "radiobutton", label="Light", variable=self.selectedBoardColor, command=self.changeBoardColor)
         self.choices.addmenuitem("Board colors", "radiobutton", label="Green", variable=self.selectedBoardColor, command=self.changeBoardColor)
@@ -314,16 +315,15 @@ class PGN_GUI(Frame):
         self.notebook.setnaturalsize()
 
         self.changeBoardSize()
+        self.changeBoardColor()
 
     def loadConfig(self):
         cfgName = 'pygn.cfg'
         if os.path.isfile(cfgName):
             cfgFile = open(cfgName,'r')
             for line in cfgFile:
-                if line[:2]=='lc':
-                    self.lightColor = line[3:line.find('*')]
-                elif line[:2]=='dc':
-                    self.darkColor = line[3:line.find('*')]
+                if line[:2]=='bc':
+                    self.boardColor = line[3:line.find('*')]
                 elif line[:2]=='m1':
                     self.lastMoveColor1 = line[3:line.find('*')]
                 elif line[:2]=='m2':
