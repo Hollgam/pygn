@@ -337,7 +337,7 @@ class PGN_GUI(Frame):
                         self.boardFliped = int(line[3:line.find('*')])
                     except:
                         pass
-            self.changeConfig('bf','1')
+            
 
     def changeConfig(self,par,value):
         cfgName = 'pygn.cfg'
@@ -940,6 +940,8 @@ class PGN_GUI(Frame):
         elif self.selectedBoardColor.get() == "Winboard":
             self.lightColor = "#C8C365"
             self.darkColor = "#77A26D"
+        self.changeConfig('lc',self.lightColor)
+        self.changeConfig('dc',self.darkColor)
 
         color = 0
         for i in range(8):
@@ -960,9 +962,11 @@ class PGN_GUI(Frame):
 
     def changeBoardSize(self):
         if self.selectedBoardSize.get() == "Small":
+            self.changeConfig('sz','Small')
             self.middleListPos = 4
             if self.selectedColorScheme.get() == "Set 1":
                 try:
+                    self.changeConfig('ps','1')
                     self.imageEmpty = PhotoImage(file = "img/set1/small/empty.gif")
                     self.imageWhiteRock = PhotoImage(file = "img/set1/small/wr.png")
                     self.imageBlackRock = PhotoImage(file = "img/set1/small/br.png")
@@ -980,6 +984,7 @@ class PGN_GUI(Frame):
                     print "Falied to load files from \\img\\set1\\small folder"
             elif self.selectedColorScheme.get() == "Set 2":
                 try:
+                    self.changeConfig('ps','2')
                     self.imageEmpty = PhotoImage(file = "img/set2/small/empty.gif")
                     self.imageWhiteRock = PhotoImage(file = "img/set2/small/wr.png")
                     self.imageBlackRock = PhotoImage(file = "img/set2/small/br.png")
@@ -1001,9 +1006,11 @@ class PGN_GUI(Frame):
             self.canvasInfo["height"] = 298
 
         elif self.selectedBoardSize.get() == "Default":
+            self.changeConfig('sz','Default')
             self.middleListPos = 7
             if self.selectedColorScheme.get() == "Set 1":
                 try:
+                    self.changeConfig('ps','1')
                     self.imageEmpty = PhotoImage(file = "img/set1/default/empty.gif")
                     self.imageWhiteRock = PhotoImage(file = "img/set1/default/wr.png")
                     self.imageBlackRock = PhotoImage(file = "img/set1/default/br.png")
@@ -1021,6 +1028,7 @@ class PGN_GUI(Frame):
                     print "Falied to load files from \\img\\set1\\default folder"
             elif self.selectedColorScheme.get() == "Set 2":
                 try:
+                    self.changeConfig('ps','2')
                     self.imageEmpty = PhotoImage(file = "img/set2/default/empty.gif")
                     self.imageWhiteRock = PhotoImage(file = "img/set2/default/wr.png")
                     self.imageBlackRock = PhotoImage(file = "img/set2/default/br.png")
@@ -1041,9 +1049,11 @@ class PGN_GUI(Frame):
             self.canvasInfo["height"] = 418
 
         elif self.selectedBoardSize.get() == "Large":
+            self.changeConfig('sz','Large')
             self.middleListPos = 10
             if self.selectedColorScheme.get() == "Set 1":
                 try:
+                    self.changeConfig('ps','1')
                     self.imageEmpty = PhotoImage(file = "img/set1/large/empty.gif")
                     self.imageWhiteRock = PhotoImage(file = "img/set1/large/wr.png")
                     self.imageBlackRock = PhotoImage(file = "img/set1/large/br.png")
@@ -1061,6 +1071,7 @@ class PGN_GUI(Frame):
                     print "Falied to load files from \\img\\set1\\large folder"
             elif self.selectedColorScheme.get() == "Set 2":
                 try:
+                    self.changeConfig('ps','2')
                     self.imageEmpty = PhotoImage(file = "img/set2/large/empty.gif")
                     self.imageWhiteRock = PhotoImage(file = "img/set2/large/wr.png")
                     self.imageBlackRock = PhotoImage(file = "img/set2/large/br.png")
@@ -1105,9 +1116,10 @@ class PGN_GUI(Frame):
 
     def changeColorScheme(self):
         if self.selectedColorScheme.get() == "Set 1":
+            self.changeConfig('ps','1')
             if self.selectedBoardSize.get() == "Small":
                 try:
-
+                    self.changeConfig('sz','Small')
                     self.imageEmpty = PhotoImage(file = "img/set1/small/empty.gif")
                     self.imageWhiteRock = PhotoImage(file = "img/set1/small/wr.png")
                     self.imageBlackRock = PhotoImage(file = "img/set1/small/br.png")
@@ -1125,6 +1137,7 @@ class PGN_GUI(Frame):
                     print "Falied to load files from \\img\\set1\\small folder"
             elif self.selectedBoardSize.get() == "Default":
                 try:
+                    self.changeConfig('sz','Default')
                     self.imageEmpty = PhotoImage(file = "img/set1/default/empty.gif")
                     self.imageWhiteRock = PhotoImage(file = "img/set1/default/wr.png")
                     self.imageBlackRock = PhotoImage(file = "img/set1/default/br.png")
@@ -1142,6 +1155,7 @@ class PGN_GUI(Frame):
                     print "Falied to load files from \\img\\set1\\default folder"
             elif self.selectedBoardSize.get() == "Large":
                 try:
+                    self.changeConfig('sz','Default')
                     self.imageEmpty = PhotoImage(file = "img/set1/large/empty.gif")
                     self.imageWhiteRock = PhotoImage(file = "img/set1/large/wr.png")
                     self.imageBlackRock = PhotoImage(file = "img/set1/large/br.png")
@@ -1159,8 +1173,10 @@ class PGN_GUI(Frame):
                     print "Falied to load files from \\img\\set1\\large folder"
 
         elif self.selectedColorScheme.get() == "Set 2":
+            self.changeConfig('ps','2')
             if self.selectedBoardSize.get() == "Small":
                 try:
+                    self.changeConfig('sz','Small')
                     self.imageEmpty = PhotoImage(file = "img/set2/small/empty.gif")
                     self.imageWhiteRock = PhotoImage(file = "img/set2/small/wr.png")
                     self.imageBlackRock = PhotoImage(file = "img/set2/small/br.png")
@@ -1178,6 +1194,7 @@ class PGN_GUI(Frame):
                     print "Falied to load files from \\img\\set2\\small folder"
             elif self.selectedBoardSize.get() == "Default":
                 try:
+                    self.changeConfig('sz','Default')
                     self.imageEmpty = PhotoImage(file = "img/set2/default/empty.gif")
                     self.imageWhiteRock = PhotoImage(file = "img/set2/default/wr.png")
                     self.imageBlackRock = PhotoImage(file = "img/set2/default/br.png")
@@ -1195,6 +1212,7 @@ class PGN_GUI(Frame):
                     print "Falied to load files from \\img\\set2\\default folder"
             elif self.selectedBoardSize.get() == "Large":
                 try:
+                    self.changeConfig('sz','Large')
                     self.imageEmpty = PhotoImage(file = "img/set2/large/empty.gif")
                     self.imageWhiteRock = PhotoImage(file = "img/set2/large/wr.png")
                     self.imageBlackRock = PhotoImage(file = "img/set2/large/br.png")
@@ -1394,6 +1412,7 @@ class PGN_GUI(Frame):
 
     def flipBoard(self):
         self.boardFliped  = not self.boardFliped
+        self.changeConfig('bf',str(int(self.boardFliped)))
         if self.gameLine != 'ERROR':
             self.changeImages(self.currentPosition)
 
