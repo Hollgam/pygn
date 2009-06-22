@@ -1797,7 +1797,9 @@ def readFileLine(fileName):
                     else:
                         resultTemp = '0-1'
                     fileIn.close()
-                    gameLine += line[:line.find(resultTemp)-1]
+
+                    gameLine += line[:line.find(resultTemp)-1]                    
+                    gameLine = clearLine(gameLine)
                     
                     print gameLine
                     return gameLine
@@ -1822,10 +1824,29 @@ def readFileLine(fileName):
         fileIn.close()
         #print comments
         #print gameLine
+        gameLine = clearLine(gameLine)
         return gameLine
     else:
         print "FILE COULD NOT BE OPENED"
         return 'ERROR'
+
+def clearLine(line):
+    gameLine = line
+    while gameLine[-1]==' ':
+        gameLine = gameLine[:-1]
+
+    lineCleared = False
+
+    while not lineCleared:
+        lenx = int(len(gameLine))
+        lineCleared = True
+        for i in range(0,lenx):
+            if i!=0 and gameLine[i-1]==' ' and gameLine[i]==' ':
+                gameLine = gameLine[:i-1]+gameLine[i:lenx]
+                lineCleared = False
+                break
+    return gameLine
+
 
 def readInfoFromFile(fileName):
     info = {}
