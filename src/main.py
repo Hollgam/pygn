@@ -324,10 +324,7 @@ class PGN_GUI(Frame):
             for line in cfgFile:
                 if line[:2]=='bc':
                     self.boardColor = line[3:line.find('*')]
-                elif line[:2]=='m1':
-                    self.lastMoveColor1 = line[3:line.find('*')]
-                elif line[:2]=='m2':
-                    self.lastMoveColor2 = line[3:line.find('*')]
+
                 elif line[:2]=='f1':
                     self.font1 = line[3:line.find('*')]
                 elif line[:2]=='f2':
