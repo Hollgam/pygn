@@ -304,7 +304,7 @@ class PGN_GUI(Frame):
         #NOTES
         self.infoPage = self.notebook.add('Notes   ')
 
-        self.textEntry = Pmw.ScrolledText( self.infoPage, text_width = 25, text_height = 12, text_wrap = WORD,hscrollmode = "none", vscrollmode = "static" )
+        self.textEntry = Pmw.ScrolledText( self.infoPage, text_width = 25, text_height = 12, text_wrap = WORD,hscrollmode = "none", vscrollmode = "static")
         self.textEntry.pack( side = TOP, expand = YES, fill = BOTH)
 #        self.buttonLoadNotes = Button(self.infoPage,text='Load',name='loadNotes',command = self.loadNotes, state = ACTIVE)
 #        self.buttonLoadNotes.pack(side=LEFT, fill=BOTH, expand=1)
@@ -1463,7 +1463,7 @@ class PGN_GUI(Frame):
             fileToLoad = "1.pgn"
             print fileToLoad
         if fileToLoad != '':
-
+            print 'FILLLLLE',fileToLoad
             currentCH = int(self.listCanvas["height"])
             currentCW = int(self.listCanvas["width"])
 
@@ -1588,22 +1588,33 @@ class PGN_GUI(Frame):
         self.KeyForward5.config(state = ACTIVE)
         self.KeyEnd.config(state = ACTIVE)
 
-#        #click on the buttons
-#        self.buttonsFrame.bind("<KeyPress-6>", self.moveForward)
-#        self.buttonsFrame.bind("<KeyPress-space>", self.moveForward)
-#        self.buttonsFrame.bind("<KeyPress-4>", self.moveBack)
-#        self.buttonsFrame.bind("<KeyPress-9>", self.moveForward5)
-#        self.buttonsFrame.bind("<KeyPress-7>", self.moveBack5)
-#        self.buttonsFrame.bind("<KeyPress-8>", self.showLastPosition)
-#        self.buttonsFrame.bind("<KeyPress-5>", self.showStartPosition)
+        def checkFocus6(event):
+            if str(self.master.focus_get()).find(str(self.textEntry))==-1 and str(self.textEntry).find(str(self.master.focus_get()))==-1:
+                self.moveForward()
+        def checkFocus4(event):
+            if str(self.master.focus_get()).find(str(self.textEntry))==-1 and str(self.textEntry).find(str(self.master.focus_get()))==-1:
+                self.moveBack()
+        def checkFocus9(event):
+            if str(self.master.focus_get()).find(str(self.textEntry))==-1 and str(self.textEntry).find(str(self.master.focus_get()))==-1:
+                self.moveForward5()
+        def checkFocus7(event):
+            if str(self.master.focus_get()).find(str(self.textEntry))==-1 and str(self.textEntry).find(str(self.master.focus_get()))==-1:
+                self.moveBack5()
+        def checkFocus8(event):
+            if str(self.master.focus_get()).find(str(self.textEntry))==-1 and str(self.textEntry).find(str(self.master.focus_get()))==-1:
+                self.showLastPosition()
+        def checkFocus5(event):
+            if str(self.master.focus_get()).find(str(self.textEntry))==-1 and str(self.textEntry).find(str(self.master.focus_get()))==-1:
+                self.showStartPosition()
 
-#        self.textEntry.bind("<KeyPress-6>", self.doN)
-#        self.textEntry.bind("<KeyPress-space>", self.doN)
-#        self.textEntry.bind("<KeyPress-4>", self.doN)
-#        self.textEntry.bind("<KeyPress-9>", self.doN)
-#        self.textEntry.bind("<KeyPress-7>", self.doN)
-#        self.textEntry.bind("<KeyPress-8>", self.doN)
-#        self.textEntry.bind("<KeyPress-5>", self.doN)
+#        click on the buttons
+        self.master.bind("<KeyPress-6>", checkFocus6)
+        self.master.bind("<KeyPress-space>", checkFocus6)
+        self.master.bind("<KeyPress-4>", checkFocus4)
+        self.master.bind("<KeyPress-9>", checkFocus9)
+        self.master.bind("<KeyPress-7>", checkFocus7)
+        self.master.bind("<KeyPress-8>", checkFocus8)
+        self.master.bind("<KeyPress-5>", checkFocus5)
 
     def makeButtonsDisabled(self):
         self.KeyStart.config(state = DISABLED)
