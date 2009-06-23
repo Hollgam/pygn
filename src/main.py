@@ -44,6 +44,7 @@ class PGN_GUI(Frame):
         self.boardSize = 'Default'
         self.numberOfSet = '2'
         self.boardColor = 'Brown'
+        self.showLastMove = 'Yes'
         self.loadConfig()
 
         self.prevButton = Button()
@@ -172,7 +173,7 @@ class PGN_GUI(Frame):
         # add items to Options/ShowLastMove
         self.choices.addcascademenu("Options", "Show last move")
         self.selectedShowLastMove = StringVar()
-        self.selectedShowLastMove.set("Yes")
+        self.selectedShowLastMove.set(self.showLastMove)
         self.choices.addmenuitem("Show last move", "radiobutton", label="Yes", variable=self.selectedShowLastMove, command=self.changeShowLastMove)
         self.choices.addmenuitem("Show last move", "radiobutton", label="No", variable=self.selectedShowLastMove, command=self.changeShowLastMove)
 
@@ -315,6 +316,7 @@ class PGN_GUI(Frame):
         self.notebook.setnaturalsize()
 
         self.changeBoardSize()
+        self.changeShowLastMove()
         self.changeBoardColor()
 
     def loadConfig(self):
@@ -324,7 +326,8 @@ class PGN_GUI(Frame):
             for line in cfgFile:
                 if line[:2]=='bc':
                     self.boardColor = line[3:line.find('*')]
-
+                elif line[:2]=='lm':
+                    self.showLastMove = line[3:line.find('*')]
                 elif line[:2]=='f1':
                     self.font1 = line[3:line.find('*')]
                 elif line[:2]=='f2':
@@ -868,6 +871,7 @@ class PGN_GUI(Frame):
         self.showTakenPieces()
 
     def changeShowLastMove(self):
+        self.changeConfig('lm',self.selectedShowLastMove.get())
         if self.selectedShowLastMove.get() == "Yes":
             try:
                 self.buttons[lastPosition1[0]][lastPosition1[1]].config(background = self.lastMoveColor1)
