@@ -1813,7 +1813,7 @@ def readFileLine(fileName):
                             if '}' in line and line.find('{')<line.find('}'):
                                 comments += [str(countLine)+':'+line[line.find('{')+1:line.find('}')]]
                                 print 'c',comments
-                                a = ' '+line[line.find('{'):line.find('}')+1]+' '
+                                a = line[line.find('{'):line.find('}')+1]
                                 line = line.replace(a,'')
                             else:
                                 print 'ERROR IN LINE',countLine,'WITH COMMENTS'
