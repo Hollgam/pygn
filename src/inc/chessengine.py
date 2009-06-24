@@ -1840,7 +1840,12 @@ def clearLine(line):
     gameLine = line
 
     while gameLine[-1]==' ':
-        gameLineCorrected = 1
+        gameLine = gameLine[:-1]
+
+    #clear *
+    if gameLine[-1]=='*':
+        gameLine = gameLine[:-1]
+    while gameLine[-1]==' ':
         gameLine = gameLine[:-1]
 
     lineCleared = False
