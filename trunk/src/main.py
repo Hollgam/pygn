@@ -1411,6 +1411,11 @@ class PGN_GUI(Frame):
         self.infoLabels = []
         self.gameInfoKeys1 = self.gameInfo.keys()
         rowCounter = 0
+        if "Result" in self.gameInfoKeys1:
+            if self.gameInfo["Result"] == "*":
+                self.gameInfo["Result"] = "In progress"
+                print self.gameInfo["Result"]
+
         for key in self.gameInfoKeys:
             if key in self.gameInfoKeys1:
                     self.infoLabels += [Label(self.infoList, text = key, font=self.infoLeftFont, wraplength=70)]
@@ -1419,7 +1424,7 @@ class PGN_GUI(Frame):
                     self.infoLabelsData[-1].grid(row=rowCounter,column=1, sticky=W, padx=1)
                     rowCounter += 1
 
-
+     
         for i in self.gameInfoKeys1:
             if i not in self.gameInfoKeys:
                 self.infoLabelsData += [Label(self.infoList, text = self.gameInfo[i], font = self.infoRightFont, wraplength=152)]
