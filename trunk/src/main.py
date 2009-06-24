@@ -1473,9 +1473,7 @@ class PGN_GUI(Frame):
         if fileToLoad=="none":
             fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
             #fileToLoad = "1.pgn"
-            print fileToLoad
         if fileToLoad != '':
-            print 'FILLLLLE',fileToLoad
             currentCH = int(self.listCanvas["height"])
             currentCW = int(self.listCanvas["width"])
 
@@ -1537,17 +1535,21 @@ class PGN_GUI(Frame):
             try:
                 print self.fileDicRev[fileToLoad]
             except:
-                someInfo=someInfo+'\n'
-                self.gamesList.insert(END,someInfo)
-                self.fileDicRev[fileToLoad]=someInfo
-                self.fileDic[someInfo]=fileToLoad
-                fileIn = open(self.fileListName,"w")
-                for line in self.filesList:
-                    line = line.replace('\n','')
-                    fileIn.write(line+'\n')
-                self.filesList+=[fileToLoad+'#'+someInfo]
-                fileIn.write(fileToLoad+'#'+someInfo+'\n')
-                fileIn.close()
+                try:
+                    print fileToLoad
+                    someInfo=someInfo+'\n'
+                    self.gamesList.insert(END,someInfo)
+                    self.fileDicRev[fileToLoad]=someInfo
+                    self.fileDic[someInfo]=fileToLoad
+                    fileIn = open(self.fileListName,"w")
+                    for line in self.filesList:
+                        line = line.replace('\n','')
+                        fileIn.write(line+'\n')
+                    self.filesList+=[fileToLoad+'#'+someInfo]
+                    fileIn.write(fileToLoad+'#'+someInfo+'\n')
+                    fileIn.close()
+                except:
+                    pass
 
     def closeGame(self, event= None):
         self.saveNotes()
