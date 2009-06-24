@@ -48,7 +48,7 @@ class PGN_GUI(Frame):
         self.loadConfig()
 
         self.prevButton = Button()
-
+        self.keyWidthx=13
         self.takenPiecesWhiteImages = []
         self.takenPiecesBlackImages = []
         self.infoLabelsData = []
@@ -592,7 +592,7 @@ class PGN_GUI(Frame):
                         if posSpace == -1:
                             posSpace = len(self.gameLine)
                             self.noBlackLastMove = 1
-                        self.button = Button(self.frameList, padx=22, text=self.gameLine[posPoint:posSpace], name=str(i)+"0",relief=GROOVE)
+                        self.button = Button(self.frameList, width=self.keyWidthx, text=self.gameLine[posPoint:posSpace], name=str(i)+"0",relief=GROOVE)
                         self.button.bind("<Button-1>",self.changePositionList)
                         self.button.grid(row=i, column=j, sticky='news')
 
@@ -603,7 +603,7 @@ class PGN_GUI(Frame):
                         if i==maxNumber:
                             posEnd = len(self.gameLine)
                         if not self.noBlackLastMove:
-                            self.button = Button(self.frameList, padx=22, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE)
+                            self.button = Button(self.frameList, width=self.keyWidthx, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE)
                             self.button.grid(row=i, column=j, sticky='news')
                             self.button.bind("<Button-1>",self.changePositionList)
                             self.buttonsDic[(i, j-2)] = self.button
@@ -1781,13 +1781,13 @@ class PGN_GUI(Frame):
                             self.noBlackLastMove = 1
 
                         if i<errorAtMove[0] or (i==errorAtMove[0] and errorAtMove[1]=='b'):
-                            self.button = Button(self.frameList, padx=22, text=self.gameLine[posPoint:posSpace], name=str(i)+"0",relief=GROOVE)
+                            self.button = Button(self.frameList, width=self.keyWidthx, text=self.gameLine[posPoint:posSpace], name=str(i)+"0",relief=GROOVE)
                             self.button.bind("<Button-1>",self.changePositionList)
 
                         elif i==errorAtMove[0] and errorAtMove[1]=='w':
-                            self.button = Button(self.frameList, padx=22, text=self.gameLine[posPoint:posSpace], name=str(i)+"0",relief=GROOVE,background='red')
+                            self.button = Button(self.frameList, width=self.keyWidthx, text=self.gameLine[posPoint:posSpace], name=str(i)+"0",relief=GROOVE,background='red')
                         else:
-                            self.button = Button(self.frameList, padx=22, text=self.gameLine[posPoint:posSpace], name=str(i)+"0",relief=GROOVE,state=DISABLED)
+                            self.button = Button(self.frameList, width=self.keyWidthx, text=self.gameLine[posPoint:posSpace], name=str(i)+"0",relief=GROOVE,state=DISABLED)
 
                         self.button.grid(row=i, column=j, sticky='news')
                         self.buttonsDic[(i, j-2)] = self.button
@@ -1800,12 +1800,12 @@ class PGN_GUI(Frame):
 #                            self.button = Button(self.frameList, padx=22, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE)
 
                             if i<errorAtMove[0]:
-                                self.button = Button(self.frameList, padx=22, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE)
+                                self.button = Button(self.frameList, width=self.keyWidthx, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE)
                                 self.button.bind("<Button-1>",self.changePositionList)
                             elif i==errorAtMove[0] and errorAtMove[1]=='b':
-                                self.button = Button(self.frameList, padx=22, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE,background='red')
+                                self.button = Button(self.frameList, width=self.keyWidthx, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE,background='red')
                             else:
-                                self.button = Button(self.frameList, padx=22, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE,state=DISABLED)
+                                self.button = Button(self.frameList, width=self.keyWidthx, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE,state=DISABLED)
 
                             self.button.grid(row=i, column=j, sticky='news')
                             self.buttonsDic[(i, j-2)] = self.button
