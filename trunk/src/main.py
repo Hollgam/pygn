@@ -7,7 +7,7 @@ from tkFileDialog import askopenfilename
 
 __author__="Hollgam and Vinchkovsky"
 __description__="A reder for PGN files."
-__version__="0.3"
+__version__="1.0"
 
 ###VARS
 stopOnWhite = 1
@@ -874,8 +874,13 @@ class PGN_GUI(Frame):
         self.changeConfig('lm',self.selectedShowLastMove.get())
         if self.selectedShowLastMove.get() == "Yes":
             try:
-                self.buttons[lastPosition1[0]][lastPosition1[1]].config(background = self.lastMoveColor1)
-                self.buttons[lastPosition2[0]][lastPosition2[1]].config(background = self.lastMoveColor2)
+                if not self.boardFliped:
+                    self.buttons[lastPosition1[0]][lastPosition1[1]].config(background = self.lastMoveColor1)
+                    self.buttons[lastPosition2[0]][lastPosition2[1]].config(background = self.lastMoveColor2)
+                else:
+                    print "SSSSSSSSSS ", -lastPosition1[0]-1, -lastPosition1[1]-1
+                    self.buttons[-lastPosition1[0]-1][-lastPosition1[1]-1].config(background = self.lastMoveColor1)
+                    self.buttons[-lastPosition2[0]-1][-lastPosition2[1]-1].config(background = self.lastMoveColor2)
             except:
                 pass
         elif self.selectedShowLastMove.get() == "No":
@@ -892,8 +897,13 @@ class PGN_GUI(Frame):
             else:
                 default2 = self.darkColor
             try:
-                self.buttons[lastPosition1[0]][lastPosition1[1]].config(background = default1)
-                self.buttons[lastPosition2[0]][lastPosition2[1]].config(background = default2)
+                if not self.boardFliped:
+                    self.buttons[lastPosition1[0]][lastPosition1[1]].config(background = default1)
+                    self.buttons[lastPosition2[0]][lastPosition2[1]].config(background = default2)
+                else:
+                    print "SSSSSSSSSS ", -lastPosition1[0]-1, -lastPosition1[1]-1
+                    self.buttons[-lastPosition1[0]-1][-lastPosition1[1]-1].config(background = default1)
+                    self.buttons[-lastPosition2[0]-1][-lastPosition2[1]-1].config(background = default2)
             except:
                 pass
 
