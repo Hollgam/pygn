@@ -6,7 +6,7 @@ from PIL.ImageTk import PhotoImage
 from tkFileDialog import askopenfilename
 
 __author__="Hollgam and Vinchkovsky"
-__description__="A reder for PGN files."
+__description__="A reader for PGN files."
 __version__="1.0"
 
 ###VARS
