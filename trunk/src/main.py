@@ -169,7 +169,7 @@ class PGN_GUI(Frame):
         self.choices.addmenuitem("Board size", "radiobutton", label="Default", variable=self.selectedBoardSize, command=self.changeBoardSize)
         self.choices.addmenuitem("Board size", "radiobutton", label="Large", variable=self.selectedBoardSize, command=self.changeBoardSize)
 
-        self.choices.addmenuitem("Options", 'separator')
+        #self.choices.addmenuitem("Options", 'separator')
         # add items to Options/ShowLastMove
         self.choices.addcascademenu("Options", "Show last move")
         self.selectedShowLastMove = StringVar()
@@ -177,7 +177,7 @@ class PGN_GUI(Frame):
         self.choices.addmenuitem("Show last move", "radiobutton", label="Yes", variable=self.selectedShowLastMove, command=self.changeShowLastMove)
         self.choices.addmenuitem("Show last move", "radiobutton", label="No", variable=self.selectedShowLastMove, command=self.changeShowLastMove)
 
-        self.choices.addmenuitem("Game", 'separator')
+        self.choices.addmenuitem("Options", 'separator')
         self.choices.addmenuitem("Options", "command", "Make everything default", command=self.defaultAll, label="Default all")
 
 
@@ -1471,8 +1471,8 @@ class PGN_GUI(Frame):
         # window for choosing file to laod
 
         if fileToLoad=="none":
-            #fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
-            fileToLoad = "1.pgn"
+            fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
+            #fileToLoad = "1.pgn"
             print fileToLoad
         if fileToLoad != '':
             print 'FILLLLLE',fileToLoad
