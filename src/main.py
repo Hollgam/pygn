@@ -177,6 +177,10 @@ class PGN_GUI(Frame):
         self.choices.addmenuitem("Show last move", "radiobutton", label="Yes", variable=self.selectedShowLastMove, command=self.changeShowLastMove)
         self.choices.addmenuitem("Show last move", "radiobutton", label="No", variable=self.selectedShowLastMove, command=self.changeShowLastMove)
 
+        self.choices.addmenuitem("Game", 'separator')
+        self.choices.addmenuitem("Options", "command", "Make everything default", command=self.defaultAll, label="Default all")
+
+
 #        # add items to Options/ShowNextMove
 #        self.choices.addcascademenu("Options", "Show next move")
 #        self.selectedShowNextMove = StringVar()
@@ -1819,7 +1823,15 @@ class PGN_GUI(Frame):
 
         #sys.exit(1) #EXITS A PROGRAM HANDY FOR CHECKS
         return 1
-
+    def defaultAll(self):
+        self.selectedColorScheme.set("Set 1")
+        self.changeColorScheme()
+        self.selectedBoardColor.set("Brown")
+        self.changeBoardColor()
+        self.selectedBoardSize.set("Default")
+        self.changeBoardSize()
+        self.selectedShowLastMove.set("Yes")
+        self.changeShowLastMove()
 def main():
     createStartPosition()
 #    fileToLoad = "1.pgn"
