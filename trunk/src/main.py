@@ -878,7 +878,6 @@ class PGN_GUI(Frame):
                     self.buttons[lastPosition1[0]][lastPosition1[1]].config(background = self.lastMoveColor1)
                     self.buttons[lastPosition2[0]][lastPosition2[1]].config(background = self.lastMoveColor2)
                 else:
-                    print "SSSSSSSSSS ", -lastPosition1[0]-1, -lastPosition1[1]-1
                     self.buttons[-lastPosition1[0]-1][-lastPosition1[1]-1].config(background = self.lastMoveColor1)
                     self.buttons[-lastPosition2[0]-1][-lastPosition2[1]-1].config(background = self.lastMoveColor2)
             except:
@@ -901,7 +900,6 @@ class PGN_GUI(Frame):
                     self.buttons[lastPosition1[0]][lastPosition1[1]].config(background = default1)
                     self.buttons[lastPosition2[0]][lastPosition2[1]].config(background = default2)
                 else:
-                    print "SSSSSSSSSS ", -lastPosition1[0]-1, -lastPosition1[1]-1
                     self.buttons[-lastPosition1[0]-1][-lastPosition1[1]-1].config(background = default1)
                     self.buttons[-lastPosition2[0]-1][-lastPosition2[1]-1].config(background = default2)
             except:
