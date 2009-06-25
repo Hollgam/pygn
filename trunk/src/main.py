@@ -238,19 +238,35 @@ class PGN_GUI(Frame):
 
 
         # Create and pack the NoteBook.
-        self.notebook = Pmw.NoteBook(self)
-        self.notebook.grid(column=1 , row=1,sticky=NW, rowspan=2)
+#        self.notebook = Pmw.NoteBook(self)
+#        self.notebook.grid(column=1 , row=1,sticky=NW, rowspan=2)
 
-#        self.notebookFrame = Frame(self, width=self.sideBarWidth+7, height=460)
-#        self.notebookFrame.grid(column=1 , row=1,sticky=NW, rowspan=2)
-#        self.notebookFrame.grid_propagate(False)
-#        self.notebook = Pmw.NoteBook(self.notebookFrame)
-#        self.notebook.grid(column=0 , row=0,sticky=NW, rowspan=2)
+        if self.selectedBoardSize.get() == "Small":
+            notebookHeight = 344
+            sidebarHeight = 310
+            listHeight = 195
+            infoHeight = 298
+        elif self.selectedBoardSize.get() == "Default":
+            notebookHeight = 464
+            sidebarHeight = 430
+            listHeight = 315
+            infoHeight = 418
+        elif self.selectedBoardSize.get() == "Large":
+            notebookHeight = 584
+            sidebarHeight = 550
+            listHeight = 435
+            infoHeight = 538
+
+        self.notebookFrame = Frame(self, width=self.sideBarWidth+11, height=notebookHeight)
+        self.notebookFrame.grid(column=1 , row=1,sticky=NW, rowspan=2)
+        self.notebookFrame.grid_propagate(False)
+        self.notebook = Pmw.NoteBook(self.notebookFrame)
+        self.notebook.grid(column=0 , row=0,sticky=NW)
 
         # Add the "Appearance" page to the notebook.
         self.movePage = self.notebook.add('Moves   ')
 
-        self.sideBar = Frame(self.movePage, width=self.sideBarWidth, height=430)
+        self.sideBar = Frame(self.movePage, width=self.sideBarWidth, height=sidebarHeight)
         self.sideBar.grid(column=1 , row=1,sticky=NW, rowspan=2)
         self.sideBar.grid_propagate(False)
 
@@ -259,7 +275,7 @@ class PGN_GUI(Frame):
         self.moveListFrame.grid(row=0,column=0,sticky=NW)
         self.vscrollbar = Scrollbar(self.moveListFrame)
         self.vscrollbar.grid(row=0, column=1, sticky=N+S, pady=4)
-        self.listCanvas = Canvas(self.moveListFrame,yscrollcommand=self.vscrollbar.set,height=315 ,width=196)
+        self.listCanvas = Canvas(self.moveListFrame,yscrollcommand=self.vscrollbar.set,height=listHeight ,width=196)
         self.listCanvas.grid(row=0, column=0, sticky=N+S+E+W, pady=4)
         self.vscrollbar.config(command=self.listCanvas.yview)
         self.frameList = Frame(self.listCanvas)
@@ -290,7 +306,7 @@ class PGN_GUI(Frame):
         self.infoFrame.grid(row=0,column=0,sticky=NW)
         self.vscrollbarInfo = Scrollbar(self.infoFrame)
         self.vscrollbarInfo.grid(row=0, column=1, sticky=N+S, pady=4)
-        self.canvasInfo = Canvas(self.infoFrame,yscrollcommand=self.vscrollbarInfo.set,height=418 ,width=196)
+        self.canvasInfo = Canvas(self.infoFrame,yscrollcommand=self.vscrollbarInfo.set,height=infoHeight ,width=196)
         self.canvasInfo.grid(row=0, column=0, sticky=N+S+E+W, pady=4)
         self.vscrollbarInfo.config(command=self.canvasInfo.yview)
         self.infoList = Frame(self.canvasInfo)
@@ -317,16 +333,16 @@ class PGN_GUI(Frame):
         self.notebook.selectpage('Games   ')
 
         #NOTES
-        self.infoPage = self.notebook.add('Notes   ')
+        self.notesPage = self.notebook.add('Notes   ')
 
         entryFont = Pmw.logicalfont('Fixed')
-        self.textEntry = Pmw.ScrolledText( self.infoPage, text_width = 25, text_height = 12, text_wrap = WORD,hscrollmode = "none", vscrollmode = "static", text_font = entryFont)
+        self.textEntry = Pmw.ScrolledText( self.notesPage, text_width = 10, text_height = 12, text_wrap = WORD,hscrollmode = "none", vscrollmode = "static", text_font = entryFont)
         self.textEntry.pack( side = TOP, expand = YES, fill = BOTH)
 #        self.buttonLoadNotes = Button(self.infoPage,text='Load',name='loadNotes',command = self.loadNotes, state = ACTIVE)
 #        self.buttonLoadNotes.pack(side=LEFT, fill=BOTH, expand=1)
-        self.buttonSaveNotes = Button(self.infoPage,text='Save',name='saveNotes',command = self.saveNotes, state = DISABLED)
+        self.buttonSaveNotes = Button(self.notesPage,text='Save',name='saveNotes',command = self.saveNotes, state = DISABLED)
         self.buttonSaveNotes.pack(side=LEFT, fill=BOTH, expand=1)
-        self.buttonClearNotes = Button(self.infoPage,text='Clear',name='clearNotes',command = self.clearNotes, state = DISABLED)
+        self.buttonClearNotes = Button(self.notesPage,text='Clear',name='clearNotes',command = self.clearNotes, state = DISABLED)
         self.buttonClearNotes.pack(side=LEFT, fill=BOTH, expand=1)
 
         self.notebook.setnaturalsize()
@@ -1036,7 +1052,7 @@ class PGN_GUI(Frame):
                     self.imageBlackPawn = PhotoImage(file = "img/set2/small/bp.png")
                 except:
                     print "Falied to load files from \\img\\set2\\small folder"
-            #self.notebookFrame["height"] = 344
+            self.notebookFrame["height"] = 344
             self.sideBar["height"] = 310
             self.listCanvas["height"] = 195
             self.canvasInfo["height"] = 298
@@ -1080,8 +1096,8 @@ class PGN_GUI(Frame):
                     self.imageBlackPawn = PhotoImage(file = "img/set2/default/bp.png")
                 except:
                     print "Falied to load files from \\img\\set2\\default folder"
+            self.notebookFrame["height"] = 464
             self.sideBar["height"] = 430
-            #self.notebookFrame["height"] = 458
             self.listCanvas["height"] = 315
             self.canvasInfo["height"] = 418
 
@@ -1124,8 +1140,8 @@ class PGN_GUI(Frame):
                     self.imageBlackPawn = PhotoImage(file = "img/set2/large/bp.png")
                 except:
                     print "Falied to load files from \\img\\set2\\large folder"
+            self.notebookFrame["height"] = 584
             self.sideBar["height"] = 550
-            #self.notebookFrame["height"] = 578
             self.listCanvas["height"] = 435
             self.canvasInfo["height"] = 538
 
