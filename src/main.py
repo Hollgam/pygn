@@ -20,13 +20,13 @@ tempCounter = 0
 
 class PGN_GUI(Frame):
 
-    def __init__(self,h="d"):
+    def __init__(self):
 
         Frame.__init__(self)
         Pmw.initialise()
 
-        self.lightColor = "#F0D9B5"
-        self.darkColor = "#B58863"
+        self.lightColor = ""
+        self.darkColor = ""
         self.lastMoveColor1 = "#FBF4A1"
         self.lastMoveColor2 = "#E9DC42"
         self.colorSelected = "#eff6b2"
@@ -66,19 +66,19 @@ class PGN_GUI(Frame):
         #self.gameInfoKeys.sort()
 
         try:
-            self.imageEmpty = PhotoImage(file = "img/set1/default/empty.gif")
-            self.imageWhiteRock = PhotoImage(file = "img/set1/default/wr.png")
-            self.imageBlackRock = PhotoImage(file = "img/set1/default/br.png")
-            self.imageWhiteBishop = PhotoImage(file = "img/set1/default/wb.png")
-            self.imageBlackBishop = PhotoImage(file = "img/set1/default/bb.png")
-            self.imageWhiteKnight = PhotoImage(file = "img/set1/default/wn.png")
-            self.imageBlackKnight = PhotoImage(file = "img/set1/default/bn.png")
-            self.imageWhiteQueen = PhotoImage(file = "img/set1/default/wq.png")
-            self.imageBlackQueen = PhotoImage(file = "img/set1/default/bq.png")
-            self.imageWhiteKing = PhotoImage(file = "img/set1/default/wk.png")
-            self.imageBlackKing = PhotoImage(file = "img/set1/default/bk.png")
-            self.imageWhitePawn = PhotoImage(file = "img/set1/default/wp.png")
-            self.imageBlackPawn = PhotoImage(file = "img/set1/default/bp.png")
+#            self.imageEmpty = PhotoImage(file = "img/set1/default/empty.gif")
+#            self.imageWhiteRock = PhotoImage(file = "img/set1/default/wr.png")
+#            self.imageBlackRock = PhotoImage(file = "img/set1/default/br.png")
+#            self.imageWhiteBishop = PhotoImage(file = "img/set1/default/wb.png")
+#            self.imageBlackBishop = PhotoImage(file = "img/set1/default/bb.png")
+#            self.imageWhiteKnight = PhotoImage(file = "img/set1/default/wn.png")
+#            self.imageBlackKnight = PhotoImage(file = "img/set1/default/bn.png")
+#            self.imageWhiteQueen = PhotoImage(file = "img/set1/default/wq.png")
+#            self.imageBlackQueen = PhotoImage(file = "img/set1/default/bq.png")
+#            self.imageWhiteKing = PhotoImage(file = "img/set1/default/wk.png")
+#            self.imageBlackKing = PhotoImage(file = "img/set1/default/bk.png")
+#            self.imageWhitePawn = PhotoImage(file = "img/set1/default/wp.png")
+#            self.imageBlackPawn = PhotoImage(file = "img/set1/default/bp.png")
 
             self.imageTakenWhiteRock = PhotoImage(file = "img/set1/taken/wr.png")
             self.imageTakenBlackRock = PhotoImage(file = "img/set1/taken/br.png")
@@ -97,6 +97,7 @@ class PGN_GUI(Frame):
             self.imageLogo = PhotoImage(file = "img/logo/gcodelogo.png")
         except:
             print "Falied to load images from \\img\\logo folder"
+
 
         self.master.bind("<Control-Key-O>", self.loadGame)
         self.master.bind("<Control-Key-o>", self.loadGame)
@@ -199,12 +200,14 @@ class PGN_GUI(Frame):
         self.choices.addmenuitem("Help", "command", command=self.showAbout, label="About")
         self.choices.addmenuitem("Help", "command", command=self.showKeys, label="Keyboard shortcuts")
 
+        self.changeColorScheme(1)
+        self.changeBoardColor(1)
+
         self.mainFrame = Frame(self)
         self.mainFrame.grid(column=0, row=1)
 
         self.frame1 = Frame(self.mainFrame)
         self.frame1.pack()
-
 
         self.buttonsFrame = Frame(self.mainFrame)
         self.createBoard()
@@ -238,9 +241,14 @@ class PGN_GUI(Frame):
         self.notebook = Pmw.NoteBook(self)
         self.notebook.grid(column=1 , row=1,sticky=NW, rowspan=2)
 
+#        self.notebookFrame = Frame(self, width=self.sideBarWidth+7, height=460)
+#        self.notebookFrame.grid(column=1 , row=1,sticky=NW, rowspan=2)
+#        self.notebookFrame.grid_propagate(False)
+#        self.notebook = Pmw.NoteBook(self.notebookFrame)
+#        self.notebook.grid(column=0 , row=0,sticky=NW, rowspan=2)
+
         # Add the "Appearance" page to the notebook.
         self.movePage = self.notebook.add('Moves   ')
-        self.notebook.tab('Moves   ').focus_set()
 
         self.sideBar = Frame(self.movePage, width=self.sideBarWidth, height=430)
         self.sideBar.grid(column=1 , row=1,sticky=NW, rowspan=2)
@@ -305,10 +313,14 @@ class PGN_GUI(Frame):
         self.loadGamesList()
 #        self.fileDic = {} #dictionary for files, format: info about file:path
         self.fileToLoad = ''
+        self.notebook.tab('Games   ').focus_set()
+        self.notebook.selectpage('Games   ')
+
         #NOTES
         self.infoPage = self.notebook.add('Notes   ')
 
-        self.textEntry = Pmw.ScrolledText( self.infoPage, text_width = 25, text_height = 12, text_wrap = WORD,hscrollmode = "none", vscrollmode = "static")
+        entryFont = Pmw.logicalfont('Fixed')
+        self.textEntry = Pmw.ScrolledText( self.infoPage, text_width = 25, text_height = 12, text_wrap = WORD,hscrollmode = "none", vscrollmode = "static", text_font = entryFont)
         self.textEntry.pack( side = TOP, expand = YES, fill = BOTH)
 #        self.buttonLoadNotes = Button(self.infoPage,text='Load',name='loadNotes',command = self.loadNotes, state = ACTIVE)
 #        self.buttonLoadNotes.pack(side=LEFT, fill=BOTH, expand=1)
@@ -321,7 +333,6 @@ class PGN_GUI(Frame):
 
         self.changeBoardSize()
         self.changeShowLastMove()
-        self.changeBoardColor()
 
     def loadConfig(self):
         cfgName = 'pygn.cfg'
@@ -927,7 +938,7 @@ class PGN_GUI(Frame):
     def changeShowLegalMoves(self):
         pass
 
-    def changeBoardColor(self):
+    def changeBoardColor(self, firstTime=0):
         self.changeConfig('bc',self.selectedBoardColor.get())
         if self.selectedBoardColor.get() == "Brown":
             self.lightColor = "#F0D9B5"
@@ -967,23 +978,23 @@ class PGN_GUI(Frame):
             self.darkColor = "#77A26D"
         self.changeConfig('lc',self.lightColor)
         self.changeConfig('dc',self.darkColor)
-
-        color = 0
-        for i in range(8):
-            for j in range(8):
-                if not color:
-                    bgcolor = self.lightColor
-                else:
-                    bgcolor = self.darkColor
-                self.buttons[i][j].config(bg=bgcolor)
+        if not firstTime:
+            color = 0
+            for i in range(8):
+                for j in range(8):
+                    if not color:
+                        bgcolor = self.lightColor
+                    else:
+                        bgcolor = self.darkColor
+                    self.buttons[i][j].config(bg=bgcolor)
+                    if not color:
+                        color = 1
+                    else:
+                        color = 0
                 if not color:
                     color = 1
                 else:
                     color = 0
-            if not color:
-                color = 1
-            else:
-                color = 0
 
     def changeBoardSize(self):
         if self.selectedBoardSize.get() == "Small":
@@ -1025,7 +1036,7 @@ class PGN_GUI(Frame):
                     self.imageBlackPawn = PhotoImage(file = "img/set2/small/bp.png")
                 except:
                     print "Falied to load files from \\img\\set2\\small folder"
-
+            #self.notebookFrame["height"] = 344
             self.sideBar["height"] = 310
             self.listCanvas["height"] = 195
             self.canvasInfo["height"] = 298
@@ -1070,6 +1081,7 @@ class PGN_GUI(Frame):
                 except:
                     print "Falied to load files from \\img\\set2\\default folder"
             self.sideBar["height"] = 430
+            #self.notebookFrame["height"] = 458
             self.listCanvas["height"] = 315
             self.canvasInfo["height"] = 418
 
@@ -1113,6 +1125,7 @@ class PGN_GUI(Frame):
                 except:
                     print "Falied to load files from \\img\\set2\\large folder"
             self.sideBar["height"] = 550
+            #self.notebookFrame["height"] = 578
             self.listCanvas["height"] = 435
             self.canvasInfo["height"] = 538
 
@@ -1139,7 +1152,7 @@ class PGN_GUI(Frame):
             self.buttonsDic[(1, 0)].update()
             self.middleListPos = int(round(int(self.listCanvas["height"])/(2.0*self.buttonsDic[(1, 0)].winfo_height())))
 
-    def changeColorScheme(self):
+    def changeColorScheme(self, firstTime = 0):
         if self.selectedColorScheme.get() == "Set 1":
             self.changeConfig('ps','1')
             if self.selectedBoardSize.get() == "Small":
@@ -1254,23 +1267,25 @@ class PGN_GUI(Frame):
                 except:
                     print "Falied to load files from \\img\\set2\\large folder"
 
-        for i in range(8):
-            for j in range(8):
-                self.buttons[i][j].destroy()
+        if not firstTime:
 
-        self.createBoard()
+            for i in range(8):
+                for j in range(8):
+                    self.buttons[i][j].destroy()
 
-        global stopOnWhite
-        from inc.chessengine import board, moveNumber
-        playTo = moveNumber
-        createStartPosition()
-        if self.gameLine != 'ERROR':
-            clearAll()
-            changes = playGame(self.gameLine, playTo, not stopOnWhite)
-            if type(changes) != type(1):
-                self.changeImages(changes)
-            else:
-                self.invalidMove(changes)
+            self.createBoard()
+
+            global stopOnWhite
+            from inc.chessengine import board, moveNumber
+            playTo = moveNumber
+            createStartPosition()
+            if self.gameLine != 'ERROR':
+                clearAll()
+                changes = playGame(self.gameLine, playTo, not stopOnWhite)
+                if type(changes) != type(1):
+                    self.changeImages(changes)
+                else:
+                    self.invalidMove(changes)
 
     def showTakenPieces(self):
         from inc.chessengine import takenWhite, takenBlack
@@ -1479,6 +1494,7 @@ class PGN_GUI(Frame):
             fileToLoad = askopenfilename(title='Choose a file to load', filetypes=[('PGN files','*.pgn')])
             #fileToLoad = "1.pgn"
         if fileToLoad != '':
+            self.notebook.selectpage('Moves   ')
             currentCH = int(self.listCanvas["height"])
             currentCW = int(self.listCanvas["width"])
 
@@ -1555,6 +1571,7 @@ class PGN_GUI(Frame):
                     fileIn.close()
                 except:
                     pass
+
 
     def closeGame(self, event= None):
         self.saveNotes()
@@ -1817,7 +1834,7 @@ class PGN_GUI(Frame):
                             self.button.grid(row=i, column=j, sticky='news')
                             self.buttonsDic[(i, j-2)] = self.button
 
-        self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
+#        self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
         self.frameList.update_idletasks()
         self.listCanvas.config(scrollregion=self.listCanvas.bbox("all"))
 
