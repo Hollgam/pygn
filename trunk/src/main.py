@@ -1776,8 +1776,9 @@ class PGN_GUI(Frame):
             changes = playGame(self.gameLine, errorAtMove[0], 1)
         print changes
         self.changeImages(changes)
-
+        from inc.chessengine import moveNumber
         global maxNumber, stopOnWhite
+        maxNumber = moveNumber
 
         #FIND MAXNUMBER
         posP=-1
@@ -1836,22 +1837,26 @@ class PGN_GUI(Frame):
                         posEnd = self.gameLine.find(" "+str(i+1)+".", posSpace)
                         if i==maxNumberInv:
                             posEnd = len(self.gameLine)
-                        if not self.noBlackLastMove:
+#                        if not self.noBlackLastMove:
 #                            self.button = Button(self.frameList, padx=22, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE)
 
-                            if i<errorAtMove[0]:
-                                self.button = Button(self.frameList, width=self.keyWidthx, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE)
-                                self.button.bind("<Button-1>",self.changePositionList)
-                            elif i==errorAtMove[0] and errorAtMove[1]=='b':
-                                self.button = Button(self.frameList, width=self.keyWidthx, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE,background='red')
-                            else:
-                                self.button = Button(self.frameList, width=self.keyWidthx, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE,state=DISABLED)
+                        if i<errorAtMove[0]:
+                            print 'NOOOORM',self.gameLine[posSpace+1:posEnd]
+                            self.button = Button(self.frameList, width=self.keyWidthx, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE)
+                            self.button.bind("<Button-1>",self.changePositionList)
+                        elif i==errorAtMove[0] and errorAtMove[1]=='b':
+                            print 'REEEEEEEEEED',self.gameLine[posSpace+1:posEnd]
+                            self.noBlackMove2=1
+                            self.noBlackLastMove = 1
+                            self.button = Button(self.frameList, width=self.keyWidthx, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE,background='red')
+                        else:
+                            self.button = Button(self.frameList, width=self.keyWidthx, text=self.gameLine[posSpace+1:posEnd], name=str(i)+"1",relief=GROOVE,state=DISABLED)
 
-                            self.button.grid(row=i, column=j, sticky='news')
-                            self.buttonsDic[(i, j-2)] = self.button
+                        self.button.grid(row=i, column=j, sticky='news')
+                        self.buttonsDic[(i, j-2)] = self.button
 
-#        self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
-        self.frameList.update_idletasks()
+        self.listCanvas.create_window(0, 0, anchor=NW, window=self.frameList)
+#        self.frameList.update_idletasks()
         self.listCanvas.config(scrollregion=self.listCanvas.bbox("all"))
 
         self.buttonsDic[(1, 0)].update()
