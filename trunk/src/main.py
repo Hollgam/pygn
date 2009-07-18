@@ -939,9 +939,9 @@ class PGN_GUI(Frame):
     def changeShowSidebar(self):
 
         if self.selectedShowSidebar.get() == "Yes":
-            self.notebook.grid()
+            self.notebookFrame.grid()
         elif self.selectedShowSidebar.get() == "No":
-            self.notebook.grid_remove()
+            self.notebookFrame.grid_remove()
 
 #        if self.selectedShowSidebar.get() == "Yes":
 #            self.selectedShowSidebar.set("No")
