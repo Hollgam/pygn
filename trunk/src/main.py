@@ -347,8 +347,8 @@ class PGN_GUI(Frame):
 
         self.notebook.setnaturalsize()
 
-        self.changeBoardSize()
-        self.changeShowLastMove()
+        #self.changeBoardSize()
+        #self.changeShowLastMove()
 
     def loadConfig(self):
         cfgName = 'pygn.cfg'
